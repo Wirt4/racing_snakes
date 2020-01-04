@@ -128,6 +128,14 @@ class Game
       Text.new('press SPACE to play', color: 'white', x: 160, y: 160, size: 35)
     end
   end
+  # players are full snake objects
+  def winner(player_one, player_two)
+    if player_one.head == player_two.head
+      msg = 'Tie!'
+      elsif (player_one.head + player_two.head).length
+    end
+  end
+
   def remove_menu
     @menu = false
   end
@@ -137,9 +145,8 @@ class Game
   def get_food_color
     @food_color
   end
+
   def respawn_food(pos)
-    #@score +=1
-    #@food_color = COLORS.sample
     @food_x = rand(GRID_WIDTH)
     @food_y = rand(GRID_HEIGHT)
     while pos.include?([@food_x, @food_y])
@@ -166,7 +173,10 @@ snake_1.draw
 update do
   #the cycle
   clear
-  snake_1.move unless game.finished? or game.menu?
+  unless game.finished? or game.menu?
+    snake_1.move
+    snake_2.move
+  end
   snake_1.draw
   snake_2.draw
   game.draw
@@ -176,7 +186,10 @@ update do
     game.respawn_food(snake_1.position)
   end
 
-  game.finish if snake_1.collision?(snake_2.position)
+  if snake_1.collision?(snake_2.position)
+    game.finish
+    game.winner (snake_1, snake_2)
+  end
 end
 
 on :key_down do |event|
