@@ -10,7 +10,7 @@ GRID_WIDTH = Window.width/GRID_SIZE
 GRID_HEIGHT = Window.height/GRID_SIZE
 NODE_SIZE = GRID_SIZE # no spaces between links in snakes
 GOLD_PLAYER = 'yellow'
-BLUE_PLAYER = 'aqua'
+BLUE_PLAYER = 'blue'
 GAME_TITLE = 'SNAKE RACE'
 PROMPT = 'Turn: '
 #grid size is 64 * 48
@@ -39,10 +39,9 @@ class Snake
     crash?
   end
   def draw
-    opacity = 0.1
-    num = 5
+    opacity = 0.2
     @position.each do |pos|
-      opacity *= 1.1
+      opacity *= 1.01
      Square.new(x: pos[0] * GRID_SIZE, y: pos[1] * GRID_SIZE, size: NODE_SIZE, color: @snake_color, z: @z) # the regular snake
         Square.new(x: pos[0] * GRID_SIZE, y: pos[1] * GRID_SIZE, size: NODE_SIZE, color: 'white' , opacity: opacity, z: @z + 1) # a lighting effect
     end
@@ -51,21 +50,21 @@ class Snake
     @direction
   end
 # assumes method will only be called in event of a keystroke
-  def turn(turn_dir)
-    is_left = turn_dir =='left'
-    @direction = if (is_left && @direction =='up')or(!is_left && @direction =='down')
-      'left'
-    elsif (is_left && @direction =='left')or(!is_left && @direction =='right')
-      'down'
-    elsif (is_left && @direction =='down')or(!is_left && @direction =='up')
-        'right'
-    else
-      'up'
-                   end
+#  def turn(turn_dir)
+#   is_left = turn_dir =='left'
+#    @direction = if (is_left && @direction =='up')or(!is_left && @direction =='down')
+#      'left'
+#    elsif (is_left && @direction =='left')or(!is_left && @direction =='right')
+#      'down'
+#    elsif (is_left && @direction =='down')or(!is_left && @direction =='up')
+#        'right'
+#    else
+#      'up'
+#                  end
+#   end
+  def new_direction(dir)
+    @direction = dir
     end
-  #def new_direction(dir)
-  #  @direction = dir
-
   def move
     @position.shift unless @growing
     case @direction
@@ -155,8 +154,8 @@ class Game
       Text.new(GAME_TITLE, color: 'white', x: 70, y: 350, size: 72)
       Text.new('(press space)', color: 'white', x: 350, y: 425, size: 30)
     end
-    Text.new(PROMPT+'Z, X,', color: GOLD_PLAYER, x: 10, y: 860 , size: 30)
-    Text.new(PROMPT+'Arrow Keys', color: BLUE_PLAYER, x: 1290, y: 860, size: 30)
+    Text.new(PROMPT+'A, W, S, D', color: GOLD_PLAYER, x: 10, y: GRID_HEIGHT - GRID_SIZE , size: 30)
+    Text.new(PROMPT+'Arrow Keys', color: BLUE_PLAYER, x: 1290, y: GRID_HEIGHT - GRID_SIZE, size: 30)
   end
 
   def winner(gold_player, blue_player)
@@ -249,7 +248,7 @@ update do
   if game.collision?(gold_snake.position, blue_snake.position)
     game.finish
     Text.new(game.winner(gold_snake, blue_snake), color: 'white', x: 70, y: 350, size: 72)
-    Text.new('(ENTER to play again, ESC to exit)', color: 'white', x: 70, y: 425, size: 30)
+    # Text.new('(ENTER to play again, ESC to exit)', color: 'white', x: 70, y: 425, size: 30)
     if game.blue_winner?
       blue_snake.z = 5
     else
@@ -259,13 +258,19 @@ update do
 end
 
 on :key_down do |event|
+#keeping gold snake on a left/right model for comparitive testing
 
-  gold_snake.turn('left') if event.key == 'z'
-  gold_snake.turn('right') if event.key == 'x'
-  blue_snake.turn('left') if event.key == 'left'
-  blue_snake.turn('right') if event.key == 'right'
+  blue_snake.new_direction('left') if event.key == 'left' && blue_snake.direction != 'right'
+  blue_snake.new_direction('right') if event.key == 'right' && blue_snake.direction != 'left'
+  blue_snake.new_direction('up') if event.key == 'up' && blue_snake.direction != 'down'
+  blue_snake.new_direction('down') if event.key == 'down' && blue_snake.direction != 'up'
 
-  if game.finished? && event.key == 'return'
+  gold_snake.new_direction('left') if event.key == 'a' && gold_snake.direction != 'right'
+  gold_snake.new_direction('right') if event.key == 'd' && gold_snake.direction != 'left'
+  gold_snake.new_direction('up') if event.key == 'w' && gold_snake.direction != 'down'
+  gold_snake.new_direction('down') if event.key == 's' && gold_snake.direction != 'up'
+
+  if game.finished? && event.key == 'space'
     gold_snake = Snake.new(GOLD_PLAYER, 1)
     blue_snake = Snake.new(BLUE_PLAYER, 2)
     game = Game.new
