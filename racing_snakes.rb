@@ -24,7 +24,8 @@ class Snake
            else
              xpos = GRID_WIDTH * 2 / 3
            end
-    @position = [[xpos, GRID_HEIGHT - 3], [xpos, GRID_HEIGHT - 4], [xpos, GRID_HEIGHT - 5]]
+    #   @position = [[xpos, GRID_HEIGHT - 3], [xpos, GRID_HEIGHT - 4], [xpos, GRID_HEIGHT - 5]]
+    @position = [[xpos, GRID_HEIGHT - 3], [xpos, GRID_HEIGHT - 4]]
     @direction = 'up'
     @growing = false
     @snake_color = color
@@ -229,7 +230,7 @@ update do
 
   if game.collision?(gold_snake.position, blue_snake.position)
     game.finish
-    Text.new(game.winner(gold_snake, blue_snake), color: 'white', x: 10, y: 40, size: 72)
+    Text.new(game.winner(gold_snake, blue_snake), color: 'white', x: 70, y: 350, size: 72)
     if game.blue_winner?
       blue_snake.z = 5
     else
