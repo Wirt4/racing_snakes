@@ -9,20 +9,18 @@ set fullscreen: 'true'
 GRID_SIZE = 20
 GRID_WIDTH = Window.width/GRID_SIZE
 GRID_HEIGHT = Window.height/GRID_SIZE
-NODE_SIZE = GRID_SIZE
-#COLORS = ['yellow', 'aqua','orange', 'red', 'fuchsia', 'silver']
-# window is 640 by 480
-# so grid is 32 by 24
+NODE_SIZE = GRID_SIZE # no spaces between links in snakes
+
 class Snake
 
   attr_writer :new_direction
 
   def initialize(color, player)
     # intialize a snake object with a color and a choice of left or right position
-    xpos = if player == 1
-      8
-    else
-      24
+    if player == 1
+             xpos =  8
+           else
+             xpos = 24
            end
     @position = [[xpos, 22], [xpos, 21], [xpos, 20]]
     @direction = 'up'
@@ -45,11 +43,11 @@ class Snake
 # assumes method will only be called in event of a keystroke
   def turn(turn_dir)
     is_left = turn_dir =='left'
-    @direction = if (is_left && @direction=='up')or(!is_left && @direction=='down')
+    @direction = if (is_left && @direction =='up')or(!is_left && @direction =='down')
       'left'
-    elsif (is_left && @direction=='left')or(!is_left && @direction=='right')
+    elsif (is_left && @direction =='left')or(!is_left && @direction =='right')
       'down'
-    elsif (is_left && @direction=='down')or(!is_left && @direction=='up')
+    elsif (is_left && @direction =='down')or(!is_left && @direction =='up')
         'right'
     else
       'up'
@@ -91,14 +89,13 @@ class Snake
     head[1]
   end
 
-  def grow(color)
-    #@snake_colors.push(color)
+  def grow
     @growing = true
   end
 
-  def collision?(other_snake_pos) # collision detection is not working as expected
-    all_snake_pos = @position + other_snake_pos
-    (all_snake_pos.uniq.length != all_snake_pos.length)
+  def crash? # checks if the snake has run into itself
+    # all_snake_pos = @position + other_snake_pos
+    (@position.uniq.length != @position.length)
   end
 
 end
@@ -113,29 +110,32 @@ class Game
     @menu = true
   end
   def draw
-    unless finished? or menu?
+    unless finished? || menu?
       Square.new(x: @food_x* GRID_SIZE, y: @food_y * GRID_SIZE, size: NODE_SIZE, color: @food_color)
     end
-    if finished?
-      msg = 'Dead snake. Press RETURN to play again.'
-    else
-      # msg = "Score: #{@score}"
-    end
-    Text.new(msg, color: 'black', x: 11, y: 11, size: 25)
-    Text.new(msg, color: 'white', x: 10, y: 10, size: 25)
+    #Text.new(msg, color: 'black', x: 11, y: 11, size: 25)
+    #Text.new(msg, color: 'white', x: 10, y: 10, size: 25)
     if menu?
       Text.new('SNAKE RACE', color: 'white', x: 10, y: 40, size: 72)
       Text.new('press SPACE to play', color: 'white', x: 160, y: 160, size: 35)
     end
   end
   # players are full snake objects
+  # assumes there is a collision
   def winner(player_one, player_two)
     if player_one.head == player_two.head
       msg = 'Tie!'
-      elsif (player_one.head + player_two.head).length
+    elsif player_one.crash? || collision?(player_two.position, [player_one.head])
+      msg = 'Blue Wins!'
+    elsif player_two.crash? || collision?(player_one.position, [player_two.head])
+      msg = 'Gold Wins!'
     end
+    Text.new(msg, color: 'white', x: 10, y: 40, size: 72)
   end
-
+  def collision?(pos1, pos2)
+    all_pos = pos1 + pos2
+    (all_pos.uniq.length != all_pos.length)
+  end
   def remove_menu
     @menu = false
   end
@@ -165,42 +165,46 @@ class Game
   end
 end
 
+gold_snake = Snake.new('yellow', 1)
+blue_snake = Snake.new('blue', 2)
 game = Game.new
-snake_1 = Snake.new('blue', 1)
-snake_2 = Snake.new('red', 2)
-snake_2.draw
-snake_1.draw
+blue_snake.draw
+gold_snake.draw
 update do
   #the cycle
   clear
   unless game.finished? or game.menu?
-    snake_1.move
-    snake_2.move
+    gold_snake.move
+    blue_snake.move
   end
-  snake_1.draw
-  snake_2.draw
+  gold_snake.draw
+  blue_snake.draw
   game.draw
 
-  if game.snake_eat_food?(snake_1.x, snake_1.y)
-    snake_1.grow(game.get_food_color)
-    game.respawn_food(snake_1.position)
+  if game.snake_eat_food?(gold_snake.x, gold_snake.y)
+    gold_snake.grow
+    game.respawn_food(gold_snake.position + blue_snake.position)
   end
 
-  if snake_1.collision?(snake_2.position)
+  if game.snake_eat_food?(blue_snake.x, blue_snake.y)
+    blue_snake.grow
+    game.respawn_food(gold_snake.position + blue_snake.position)
+  end
+
+  if game.collision?(gold_snake.position, blue_snake.position)
     game.finish
-    game.winner (snake_1, snake_2)
+    game.winner(gold_snake, blue_snake)
   end
 end
 
 on :key_down do |event|
-  #snake_1.new_direction('left') if event.key == 'left' && snake_1.direction != 'right'
-  #snake_1.new_direction('right') if event.key =='right'&& snake_1.direction != 'left'
-  #snake_1.new_direction('up') if event.key == 'up' && snake_1.direction != 'down'
-  #snake_1.new_direction ('down') if event.key == 'down' && snake_1.direction != 'up'
-  snake_1.turn('left') if event.key == 'left'
-  snake_1.turn('right') if event.key == 'right'
+  gold_snake.turn('left') if event.key == 'a'
+  gold_snake.turn('right') if event.key == 's'
+  blue_snake.turn('left') if event.key =='left'
+  blue_snake.turn('right') if event.key =='right'
   if event.key == 'return'
-    snake_1 = Snake.new('blue', 1)
+    gold_snake = Snake.new('yellow', 1)
+    blue_snake = Snake.new('blue', 2)
     game = Game.new
   end
   close if event.key == 'escape'
