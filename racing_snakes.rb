@@ -4,12 +4,12 @@ set background: 'black' # like the idea of yellow bg and fuchsia squares
 set fps_cap: 15
 set width: 1280
 set height: 960
-set title: 'Rainbow Snake'
+set title: 'Only Solutions'
 set fullscreen: 'true'
 GRID_SIZE = 20
 GRID_WIDTH = Window.width/GRID_SIZE
 GRID_HEIGHT = Window.height/GRID_SIZE
-NODE_SIZE = GRID_SIZE - 2
+NODE_SIZE = GRID_SIZE
 #COLORS = ['yellow', 'aqua','orange', 'red', 'fuchsia', 'silver']
 # window is 640 by 480
 # so grid is 32 by 24
@@ -19,11 +19,11 @@ class Snake
 
   def initialize(color, player)
     # intialize a snake object with a color and a choice of left or right position
-    if player == 1
-      xpos = 8
+    xpos = if player == 1
+      8
     else
-      xpos = 24
-    end
+      24
+           end
     @position = [[xpos, 22], [xpos, 21], [xpos, 20]]
     @direction = 'up'
     @growing = false
@@ -42,10 +42,22 @@ class Snake
   def direction
     @direction
   end
+# assumes method will only be called in event of a keystroke
+  def turn(turn_dir)
+    is_left = turn_dir =='left'
+    @direction = if (is_left && @direction=='up')or(!is_left && @direction=='down')
+      'left'
+    elsif (is_left && @direction=='left')or(!is_left && @direction=='right')
+      'down'
+    elsif (is_left && @direction=='down')or(!is_left && @direction=='up')
+        'right'
+    else
+      'up'
+                   end
+    end
+  #def new_direction(dir)
+  #  @direction = dir
 
-  def new_direction(dir)
-    @direction = dir
-  end
   def move
     @position.shift unless @growing
     case @direction
@@ -63,7 +75,7 @@ class Snake
   def new_coords(x,y)
     [x % GRID_WIDTH, y % GRID_HEIGHT]
   end
-  def get_pos
+  def position
     @position
   end
 
@@ -84,8 +96,9 @@ class Snake
     @growing = true
   end
 
-  def collision? # collision detection is not working as expected
-    (@position.uniq.length != @position.length)
+  def collision?(other_snake_pos) # collision detection is not working as expected
+    all_snake_pos = @position + other_snake_pos
+    (all_snake_pos.uniq.length != all_snake_pos.length)
   end
 
 end
@@ -124,8 +137,8 @@ class Game
   def get_food_color
     @food_color
   end
-  def record_hit(pos)
-    @score +=1
+  def respawn_food(pos)
+    #@score +=1
     #@food_color = COLORS.sample
     @food_x = rand(GRID_WIDTH)
     @food_y = rand(GRID_HEIGHT)
@@ -146,32 +159,35 @@ class Game
 end
 
 game = Game.new
-snake = Snake.new('blue', 1)
-snake.draw
+snake_1 = Snake.new('blue', 1)
+snake_2 = Snake.new('red', 2)
+snake_2.draw
+snake_1.draw
 update do
   #the cycle
   clear
-  snake.move unless game.finished? or game.menu?
-  snake.draw
+  snake_1.move unless game.finished? or game.menu?
+  snake_1.draw
+  snake_2.draw
   game.draw
 
-  if game.snake_eat_food?(snake.x, snake.y)
-    snake.grow(game.get_food_color)
-    game.record_hit(snake.get_pos)
+  if game.snake_eat_food?(snake_1.x, snake_1.y)
+    snake_1.grow(game.get_food_color)
+    game.respawn_food(snake_1.position)
   end
 
-  if snake.collision?
-    game.finish
-  end
+  game.finish if snake_1.collision?(snake_2.position)
 end
 
 on :key_down do |event|
-  snake.new_direction('left') if event.key == 'left' && snake.direction != 'right'
-  snake.new_direction('right') if event.key =='right'&& snake.direction != 'left'
-  snake.new_direction('up') if event.key == 'up' && snake.direction != 'down'
-  snake.new_direction ('down') if event.key == 'down' && snake.direction != 'up'
+  #snake_1.new_direction('left') if event.key == 'left' && snake_1.direction != 'right'
+  #snake_1.new_direction('right') if event.key =='right'&& snake_1.direction != 'left'
+  #snake_1.new_direction('up') if event.key == 'up' && snake_1.direction != 'down'
+  #snake_1.new_direction ('down') if event.key == 'down' && snake_1.direction != 'up'
+  snake_1.turn('left') if event.key == 'left'
+  snake_1.turn('right') if event.key == 'right'
   if event.key == 'return'
-    snake = Snake.new('blue',1)
+    snake_1 = Snake.new('blue', 1)
     game = Game.new
   end
   close if event.key == 'escape'
