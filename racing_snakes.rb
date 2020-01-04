@@ -1,9 +1,9 @@
 
 require 'ruby2d'
 set background: 'black' # like the idea of yellow bg and fuchsia squares
-set fps_cap: 15
-set width: 1280
-set height: 960
+set fps_cap: 16 # formerly 15, trying to test for a tie condition
+set width: 1600
+set height: 900
 set fullscreen: 'true'
 GRID_SIZE = 20
 GRID_WIDTH = Window.width/GRID_SIZE
@@ -27,19 +27,19 @@ class Snake
     @growing = false
     @snake_color = color
   end
-
+  def hit_wall?(other_player)
+    @position.pop
+    @position += [other_player.head]
+    crash?
+  end
   def draw
     opacity = 0.1
     num = 5
     @position.each do |pos|
       opacity *= 1.1
-      color_snake =Square.new(x: pos[0] * GRID_SIZE, y: pos[1] * GRID_SIZE, size: NODE_SIZE, color: @snake_color)
-      light_fx = Square.new(x: pos[0] * GRID_SIZE, y: pos[1] * GRID_SIZE, size: NODE_SIZE, color: 'white' , opacity: opacity)
-
+     Square.new(x: pos[0] * GRID_SIZE, y: pos[1] * GRID_SIZE, size: NODE_SIZE, color: @snake_color) # the regular snake
+        Square.new(x: pos[0] * GRID_SIZE, y: pos[1] * GRID_SIZE, size: NODE_SIZE, color: 'white' , opacity: opacity) # a lighting effect
     end
-  end
-  def body
-    body = position.shift
   end
   def direction
     @direction
@@ -74,8 +74,12 @@ class Snake
     end
     @growing = false
   end
+
   def new_coords(x,y)
     [x % GRID_WIDTH, y % GRID_HEIGHT]
+  end
+  def body
+    return @position.pop()
   end
   def position
     @position
@@ -97,42 +101,65 @@ class Snake
     @growing = true
   end
 
-  def crash?(pos_array)
-    crash = false
-    pos_array.each do |loc|
-      crash = crash || (head[0]==loc[0]&&head[1]==loc[1])
-    end
-    crash #returns crash
+  def crash?
+    @position.length != @position.uniq.length
   end
 
 end
 # the game class, tracks score and displays feedback for player
 class Game
   def initialize
-    #@score = 0
-    @food_x = GRID_WIDTH/2 # may want a second method to spawn food to not to interfere with snake
-    @food_y = GRID_HEIGHT/3
+    @food_x = GRID_WIDTH / 2
+    @food_y = GRID_HEIGHT / 3
     @finished = false
     @food_color = 'white'
     @menu = true
+    @tie = false
+  end
+  def tie(bool)
+    @tie = bool
+  end
+  def check_for_tie(p1, p2)
+    if p1.head[0]==p2.head[0]
+      if p1.head[1]-1 ==p2.head[1]&& p1.direction=='up'&& p2.direction=='down'
+        return true
+      end
+      if p1.head[1]+1==p2.head[1]&&p1.direction=='down'&& p2.direction=='up'
+        return true
+      end
+    elsif p1.head[1]==p2.head[1]
+      if p1.head[0]-1 == p2.head[0] && p1.direction=='left'&& p2.direction=='right'
+        return true
+      end
+      if p1.head[0] + 1 == p2.head[0] && p1.direction=='right'&& p2.direction =='left'
+        return true
+      end
+    end
+    return false
   end
   def draw
     unless finished? || menu?
       Square.new(x: @food_x* GRID_SIZE, y: @food_y * GRID_SIZE, size: NODE_SIZE, color: @food_color)
     end
-    #Text.new(msg, color: 'black', x: 11, y: 11, size: 25)
-    #Text.new(msg, color: 'white', x: 10, y: 10, size: 25)
     if menu?
       Text.new('SNAKE RACE', color: 'white', x: 10, y: 40, size: 72)
       Text.new('press SPACE to play', color: 'white', x: 160, y: 160, size: 35)
     end
   end
+
   def winner(gold_player, blue_player)
-    if gold_player.head == blue_player.head
-      msg = 'TIE!'
+    if @tie
+      puts 'Tie'
+      return 'Tie'
+      end
+    if gold_player.crash?  || blue_player.hit_wall?(gold_player)
+      puts 'Blue Wins'
+      return 'Blue Wins'
     end
-    Text.new(msg, color: 'white', x: 10, y: 40, size: 72)
+      puts 'Gold Wins'
+      return 'Gold Wins'
   end
+
   def collision?(pos1, pos2)
     all_pos = pos1 + pos2
     (all_pos.uniq.length != all_pos.length)
@@ -175,6 +202,7 @@ update do
   #the cycle
   clear
   unless game.finished? or game.menu?
+    game.tie(game.check_for_tie(gold_snake, blue_snake))
     gold_snake.move
     blue_snake.move
   end
@@ -194,13 +222,13 @@ update do
 
   if game.collision?(gold_snake.position, blue_snake.position)
     game.finish
-    game.winner(gold_snake, blue_snake)
+    Text.new(game.winner(gold_snake, blue_snake), color: 'white', x: 10, y: 40, size: 72)
   end
 end
 
 on :key_down do |event|
-  gold_snake.turn('left') if event.key == 'a'
-  gold_snake.turn('right') if event.key == 's'
+  gold_snake.turn('left') if event.key == 'z'
+  gold_snake.turn('right') if event.key == 'x'
   blue_snake.turn('left') if event.key =='left'
   blue_snake.turn('right') if event.key =='right'
   if event.key == 'return'
