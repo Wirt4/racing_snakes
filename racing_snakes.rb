@@ -4,12 +4,12 @@ set background: 'black' # like the idea of yellow bg and fuchsia squares
 set fps_cap: 15
 set width: 1280
 set height: 960
-set title: 'Only Solutions'
 set fullscreen: 'true'
 GRID_SIZE = 20
 GRID_WIDTH = Window.width/GRID_SIZE
 GRID_HEIGHT = Window.height/GRID_SIZE
 NODE_SIZE = GRID_SIZE # no spaces between links in snakes
+#grid size is 64 * 48
 
 class Snake
 
@@ -18,25 +18,29 @@ class Snake
   def initialize(color, player)
     # intialize a snake object with a color and a choice of left or right position
     if player == 1
-             xpos =  8
+             xpos =  GRID_WIDTH / 3
            else
-             xpos = 24
+             xpos = GRID_WIDTH * 2 / 3
            end
-    @position = [[xpos, 22], [xpos, 21], [xpos, 20]]
+    @position = [[xpos, GRID_HEIGHT - 3], [xpos, GRID_HEIGHT - 4], [xpos, GRID_HEIGHT - 5]]
     @direction = 'up'
     @growing = false
     @snake_color = color
   end
 
   def draw
-    # iterate backwards through snake to re-draw and append colors in the correct order
-    num = @position.length - 1
+    opacity = 0.1
+    num = 5
     @position.each do |pos|
-      Square.new(x: pos[0] * GRID_SIZE, y: pos[1] * GRID_SIZE, size: NODE_SIZE, color: @snake_color)
-      num -= 1
+      opacity *= 1.1
+      color_snake =Square.new(x: pos[0] * GRID_SIZE, y: pos[1] * GRID_SIZE, size: NODE_SIZE, color: @snake_color)
+      light_fx = Square.new(x: pos[0] * GRID_SIZE, y: pos[1] * GRID_SIZE, size: NODE_SIZE, color: 'white' , opacity: opacity)
+
     end
   end
-
+  def body
+    body = position.shift
+  end
   def direction
     @direction
   end
@@ -93,9 +97,12 @@ class Snake
     @growing = true
   end
 
-  def crash? # checks if the snake has run into itself
-    # all_snake_pos = @position + other_snake_pos
-    (@position.uniq.length != @position.length)
+  def crash?(pos_array)
+    crash = false
+    pos_array.each do |loc|
+      crash = crash || (head[0]==loc[0]&&head[1]==loc[1])
+    end
+    crash #returns crash
   end
 
 end
@@ -103,8 +110,8 @@ end
 class Game
   def initialize
     #@score = 0
-    @food_x = rand(GRID_WIDTH) # may want a second method to spawn food to not to interfere with snake
-    @food_y = rand(GRID_HEIGHT)
+    @food_x = GRID_WIDTH/2 # may want a second method to spawn food to not to interfere with snake
+    @food_y = GRID_HEIGHT/3
     @finished = false
     @food_color = 'white'
     @menu = true
@@ -120,15 +127,9 @@ class Game
       Text.new('press SPACE to play', color: 'white', x: 160, y: 160, size: 35)
     end
   end
-  # players are full snake objects
-  # assumes there is a collision
-  def winner(player_one, player_two)
-    if player_one.head == player_two.head
-      msg = 'Tie!'
-    elsif player_one.crash? || collision?(player_two.position, [player_one.head])
-      msg = 'Blue Wins!'
-    elsif player_two.crash? || collision?(player_one.position, [player_two.head])
-      msg = 'Gold Wins!'
+  def winner(gold_player, blue_player)
+    if gold_player.head == blue_player.head
+      msg = 'TIE!'
     end
     Text.new(msg, color: 'white', x: 10, y: 40, size: 72)
   end
@@ -165,7 +166,7 @@ class Game
   end
 end
 
-gold_snake = Snake.new('yellow', 1)
+gold_snake = Snake.new('orange', 1)
 blue_snake = Snake.new('blue', 2)
 game = Game.new
 blue_snake.draw
@@ -203,7 +204,7 @@ on :key_down do |event|
   blue_snake.turn('left') if event.key =='left'
   blue_snake.turn('right') if event.key =='right'
   if event.key == 'return'
-    gold_snake = Snake.new('yellow', 1)
+    gold_snake = Snake.new('orange', 1)
     blue_snake = Snake.new('blue', 2)
     game = Game.new
   end
