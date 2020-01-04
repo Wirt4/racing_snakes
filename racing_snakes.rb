@@ -1,16 +1,18 @@
 
 require 'ruby2d'
 set background: 'black' # like the idea of yellow bg and fuchsia squares
-set fps_cap: 20
-set width: 1600
-set height: 900
+set fps_cap: 15
+set width: 1520
+set height: 845
 set fullscreen: 'true'
-GRID_SIZE = 20
+GRID_SIZE = 30
 GRID_WIDTH = Window.width/GRID_SIZE
 GRID_HEIGHT = Window.height/GRID_SIZE
 NODE_SIZE = GRID_SIZE # no spaces between links in snakes
 GOLD_PLAYER = 'yellow'
 BLUE_PLAYER = 'aqua'
+GAME_TITLE = 'SNAKE RACE'
+PROMPT = 'Turn: '
 #grid size is 64 * 48
 
 class Snake
@@ -24,8 +26,8 @@ class Snake
            else
              xpos = GRID_WIDTH * 2 / 3
            end
-    #   @position = [[xpos, GRID_HEIGHT - 3], [xpos, GRID_HEIGHT - 4], [xpos, GRID_HEIGHT - 5]]
-    @position = [[xpos, GRID_HEIGHT - 3], [xpos, GRID_HEIGHT - 4]]
+    @position = [[xpos, GRID_HEIGHT - 3], [xpos, GRID_HEIGHT - 4], [xpos, GRID_HEIGHT - 5]]
+    # @position = [[xpos, GRID_HEIGHT - 3], [xpos, GRID_HEIGHT - 4]]
     @direction = 'up'
     @growing = false
     @snake_color = color
@@ -150,11 +152,11 @@ class Game
       Square.new(x: @food_x* GRID_SIZE, y: @food_y * GRID_SIZE, size: NODE_SIZE, color: @food_color)
     end
     if menu?
-      Text.new('SNAKE RACE', color: 'white', x: 70, y: 350, size: 72)
+      Text.new(GAME_TITLE, color: 'white', x: 70, y: 350, size: 72)
       Text.new('(press space)', color: 'white', x: 350, y: 425, size: 30)
     end
-    Text.new('Move: Z, X,', color: GOLD_PLAYER, x: 10, y: 860 , size: 30)
-    Text.new('Move: Arrow Keys', color: BLUE_PLAYER, x: 1340, y: 860, size: 30)
+    Text.new(PROMPT+'Z, X,', color: GOLD_PLAYER, x: 10, y: 860 , size: 30)
+    Text.new(PROMPT+'Arrow Keys', color: BLUE_PLAYER, x: 1290, y: 860, size: 30)
   end
 
   def winner(gold_player, blue_player)
@@ -209,7 +211,7 @@ class Game
     @finished
   end
 end
-
+count = 0
 gold_snake = Snake.new(GOLD_PLAYER, 1)
 blue_snake = Snake.new(BLUE_PLAYER, 2)
 game = Game.new
@@ -222,6 +224,7 @@ update do
     game.tie(game.check_for_tie(gold_snake, blue_snake))
     gold_snake.move
     blue_snake.move
+    count += 1
   end
   gold_snake.draw
   blue_snake.draw
@@ -230,16 +233,23 @@ update do
   if game.snake_eat_food?(gold_snake.x, gold_snake.y)
     gold_snake.grow
     game.respawn_food(gold_snake.position + blue_snake.position)
+    count = 0
   end
-
   if game.snake_eat_food?(blue_snake.x, blue_snake.y)
     blue_snake.grow
+    game.respawn_food(gold_snake.position + blue_snake.position)
+    count = 0
+  end
+# randomise the food appearences in case some poor sport decides to start circling it
+  if count > 20 * rand(20..30)
+    count = 0
     game.respawn_food(gold_snake.position + blue_snake.position)
   end
 
   if game.collision?(gold_snake.position, blue_snake.position)
     game.finish
     Text.new(game.winner(gold_snake, blue_snake), color: 'white', x: 70, y: 350, size: 72)
+    Text.new('(ENTER to play again, ESC to exit)', color: 'white', x: 70, y: 425, size: 30)
     if game.blue_winner?
       blue_snake.z = 5
     else
