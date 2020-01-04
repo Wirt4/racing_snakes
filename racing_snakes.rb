@@ -117,7 +117,7 @@ class Game
     @food_y = GRID_HEIGHT / 3
     @finished = false
     @food_color = 'white'
-    @menu = true
+    @paused = true
     @tie = false
     @blue_winner = false
   end
@@ -150,8 +150,8 @@ class Game
       Square.new(x: @food_x* GRID_SIZE, y: @food_y * GRID_SIZE, size: NODE_SIZE, color: @food_color)
     end
     if menu?
-      Text.new('SNAKE RACE', color: 'white', x: 10, y: 40, size: 72)
-      Text.new('press SPACE to play', color: 'white', x: 160, y: 160, size: 35)
+      Text.new('SNAKE RACE', color: 'white', x: 70, y: 350, size: 72)
+      Text.new('(press space)', color: 'white', x: 350, y: 425, size: 30)
     end
     Text.new('Move: Z, X,', color: GOLD_PLAYER, x: 10, y: 860 , size: 30)
     Text.new('Move: Arrow Keys', color: BLUE_PLAYER, x: 1340, y: 860, size: 30)
@@ -172,9 +172,15 @@ class Game
     all_pos = pos1 + pos2
     (all_pos.uniq.length != all_pos.length)
   end
-  def remove_menu
-    @menu = false
+
+  def pause
+    if @paused
+      @paused = false
+    else
+      @paused = true
+    end
   end
+
   def snake_eat_food?(x, y)
     @food_x == x && @food_y == y
   end
@@ -190,12 +196,15 @@ class Game
       @food_y = rand(GRID_HEIGHT)
     end
   end
+
   def finish
     @finished = true
   end
+
   def menu?
-    @menu
+    @paused
   end
+
   def finished?
     @finished
   end
@@ -240,16 +249,19 @@ update do
 end
 
 on :key_down do |event|
+
   gold_snake.turn('left') if event.key == 'z'
   gold_snake.turn('right') if event.key == 'x'
-  blue_snake.turn('left') if event.key =='left'
-  blue_snake.turn('right') if event.key =='right'
-  if event.key == 'return'
+  blue_snake.turn('left') if event.key == 'left'
+  blue_snake.turn('right') if event.key == 'right'
+
+  if game.finished? && event.key == 'return'
     gold_snake = Snake.new(GOLD_PLAYER, 1)
     blue_snake = Snake.new(BLUE_PLAYER, 2)
     game = Game.new
   end
+
   close if event.key == 'escape'
-  game.remove_menu if event.key = 'space'
+  game.pause if event.key =='space'
 end
 show
