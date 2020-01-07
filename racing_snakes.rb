@@ -9,7 +9,7 @@ GRID_SIZE = 30
 GRID_WIDTH = Window.width/GRID_SIZE
 GRID_HEIGHT = Window.height/GRID_SIZE
 NODE_SIZE = GRID_SIZE # no spaces between links in snakes
-RED_PLAYER = 'fuchsia'
+RED_PLAYER = 'yellow'
 BLUE_PLAYER = 'blue'
 GAME_TITLE = 'SNAKE RACE'
 PROMPT = 'Turn: '
@@ -39,9 +39,9 @@ class Snake
     crash?
   end
   def draw
-    opacity = 0.2
-    @position.each do |pos|
-      opacity *= 1.01
+    opacity = 0.4
+    @position.reverse.each do |pos|
+      opacity *= 0.9
      Square.new(x: pos[0] * GRID_SIZE, y: pos[1] * GRID_SIZE, size: NODE_SIZE, color: @snake_color, z: @z) # the regular snake
         Square.new(x: pos[0] * GRID_SIZE, y: pos[1] * GRID_SIZE, size: NODE_SIZE, color: 'white' , opacity: opacity, z: @z + 1) # a lighting effect
     end
