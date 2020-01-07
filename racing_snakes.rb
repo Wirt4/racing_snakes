@@ -2,8 +2,8 @@ require 'ruby2d'
 require '/Users/wirtsalthouse/RubymineProjects/racing_snakes/snake.rb'
 require '/Users/wirtsalthouse/RubymineProjects/racing_snakes/game.rb'
 set background: 'black'
-set width: 1520
-set height: 845
+set width: 1920
+set height: 1080
 set fps_cap: 20
 set fullscreen: 'true'
 GRID_SIZE = 30

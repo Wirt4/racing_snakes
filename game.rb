@@ -51,7 +51,7 @@ def draw
     drop_shadow('(press space)',  TEXT_COLOR, 350, 425, 30, 2)
   end
   drop_shadow(PROMPT + PLAYER_ONE_KEYS,  @p1color, 10, GRID_HEIGHT-GRID_SIZE, 30,2)
-  drop_shadow(PROMPT + PLAYER_TWO_KEYS, @p2color, 1280, GRID_HEIGHT-GRID_SIZE, 30,2)
+  drop_shadow(PROMPT + PLAYER_TWO_KEYS, @p2color, 1920 - 250, GRID_HEIGHT-GRID_SIZE, 30,2)
 end
 
 # returns a string of who wins
