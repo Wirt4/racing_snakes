@@ -1,7 +1,7 @@
 
 require 'ruby2d'
 set background: 'black' # like the idea of yellow bg and fuchsia squares
-set fps_cap: 16
+set fps_cap: 18
 set width: 1520
 set height: 845
 set fullscreen: 'true'
@@ -9,7 +9,7 @@ GRID_SIZE = 30
 GRID_WIDTH = Window.width/GRID_SIZE
 GRID_HEIGHT = Window.height/GRID_SIZE
 NODE_SIZE = GRID_SIZE # no spaces between links in snakes
-RED_PLAYER = 'yellow'
+GOLD_PLAYER = 'yellow'
 BLUE_PLAYER = 'blue'
 GAME_TITLE = 'SNAKE RACE'
 PROMPT = 'Turn: '
@@ -159,7 +159,7 @@ class Game
       Text.new(GAME_TITLE, color: 'white', x: 70, y: 350, size: 72)
       Text.new('(press space)', color: 'white', x: 350, y: 425, size: 30)
     end
-    Text.new(PROMPT+'A, W, S, D', color: RED_PLAYER, x: 10, y: GRID_HEIGHT - GRID_SIZE , size: 30)
+    Text.new(PROMPT+'A, W, S, D', color: GOLD_PLAYER, x: 10, y: GRID_HEIGHT - GRID_SIZE , size: 30)
     Text.new(PROMPT+'Arrow Keys', color: BLUE_PLAYER, x: 1290, y: GRID_HEIGHT - GRID_SIZE, size: 30)
   end
 
@@ -171,7 +171,7 @@ class Game
       return 'Blue Wins'
       @blue_winner = true
     end
-      return 'Violet Wins'
+      return 'Gold Wins'
   end
 
   def collision?(pos1, pos2)
@@ -216,7 +216,7 @@ class Game
   end
 end
 count = 0
-gold_snake = Snake.new(RED_PLAYER, 1)
+gold_snake = Snake.new(GOLD_PLAYER, 1)
 blue_snake = Snake.new(BLUE_PLAYER, 2)
 game = Game.new
 blue_snake.draw
@@ -278,7 +278,7 @@ on :key_down do |event|
   gold_snake.new_direction('down') if event.key == 's' && gold_snake.direction != 'up'
 
   if game.finished? && event.key == 'space'
-    gold_snake = Snake.new(RED_PLAYER, 1)
+    gold_snake = Snake.new(GOLD_PLAYER, 1)
     blue_snake = Snake.new(BLUE_PLAYER, 2)
     game = Game.new
   end
