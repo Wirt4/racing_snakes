@@ -1,3 +1,5 @@
+# Written January 2020 by Wirt Salthouse
+# github.com/Wirt4
 require 'ruby2d'
 set background: 'black'
 set width: 1920
