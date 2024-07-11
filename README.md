@@ -31,5 +31,5 @@
     <li>Gameplay change: only one turn per clock tick</li>
     <li>Food respawns after 15 - 20 seconds of inactivity</li>
     <li>Randomized colors for snakes and graphical embellishments</li>
-    <li>a pause button</li>
+    <li>a pause button (space bar)</li>
 </ul>
