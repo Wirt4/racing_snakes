@@ -2,7 +2,7 @@ class Snake
 
   attr_writer :new_direction
   attr_writer :z
-  # snakes are initialized with a color and integer, player one of tow
+  # snakes are initialized with a color and integer, player one of two
   # colors are ruby2d keywords
   def initialize(color, player)
     xpos = if player == 1
@@ -11,7 +11,6 @@ class Snake
              GRID_WIDTH / 3
            end
     @position = [[xpos, GRID_HEIGHT - 3], [xpos, GRID_HEIGHT - 4], [xpos, GRID_HEIGHT - 5]]
-    # @position = [[xpos, GRID_HEIGHT - 3], [xpos, GRID_HEIGHT - 4]]
     @direction = 'up'
     @growing = @turned = false
     @snake_color = color

@@ -114,5 +114,4 @@ class Game
     end
     false
   end
-
 end
