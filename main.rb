@@ -45,7 +45,7 @@ update do
     game.tie(game.is_tie?(player2, player1))
     player2.move
     player1.move
-    clock.tick()
+    clock.increment()
   end
   player2.draw
   player1.draw

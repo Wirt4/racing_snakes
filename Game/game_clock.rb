@@ -1,10 +1,14 @@
 class GameClock
-  def initialize()
-    @tick =0
+  def initialize(startTime=0)
+    @tick = startTime
   end
 
-  def tick()
-    @tick += 1
+  def increment()
+    @tick +=1
+  end
+
+  def tick
+    @tick
   end
 
   def reset()
