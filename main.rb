@@ -1,6 +1,7 @@
 require 'ruby2d'
 
-load 'game.rb'
+load 'Game/game.rb'
+load 'Game/game_clock.rb'
 load 'snake.rb'
 
 set background: 'black'
@@ -24,17 +25,17 @@ PLAYER_ONE_COLORS = ['yellow', 'orange', 'red', ]
 PLAYER_TWO_COLORS = ['fuchsia', 'blue', 'green', ]
 
 
-
-
-tick = 0 # count for tracking game time and respawning food if no effect
+clock = GameClock.new()
 p1color = PLAYER_ONE_COLORS.sample
 p2color = PLAYER_TWO_COLORS.sample
 #twoPlayers = false
-player2 = Snake.new(p1color, 2) 
+player2 = Snake.new(p1color, 2)
 player1 = Snake.new(p2color, 1)
 game = Game.new(p1color, p2color)
-player2.draw 
+player2.draw
 player1.draw
+
+
 
 # the game cycle
 update do
@@ -42,29 +43,29 @@ update do
 
   unless game.finished? or game.menu?
     game.tie(game.is_tie?(player2, player1))
-    player2.move 
+    player2.move
     player1.move
-    tick += 1
+    clock.increment()
   end
-  player2.draw 
+  player2.draw
   player1.draw
   game.draw
 
   if game.snake_eat_food?(player2.x, player2.y)
-    player2.grow 
+    player2.grow
     game.respawn_food(player2.position + player1.position)
-    tick = 0
+    clock.reset()
   end
 
   if game.snake_eat_food?(player1.x, player1.y)
     player1.grow
     game.respawn_food(player2.position + player1.position)
-    tick = 0
+    clock.reset()
   end
 
 # randomises the food appearences between 15 and 20 seconds since game start or last food eats
-  if tick > 20 * rand(15..20)
-    tick = 0
+  if clock.is_food_time()
+    clock.reset()
     game.respawn_food(player2.position + player1.position)
   end
 
@@ -98,7 +99,7 @@ on :key_down do |event|
     p1color = PLAYER_ONE_COLORS.sample
     p2color = PLAYER_TWO_COLORS.sample
     player2 = Snake.new(p1color, 1)
-    player1 = Snake.new(p2color, 2) 
+    player1 = Snake.new(p2color, 2)
     game = Game.new(p1color, p2color)
   end
 
