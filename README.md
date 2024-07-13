@@ -20,7 +20,7 @@
 
 <h1>To Play</h1>
 <p>Run the followoing to start the app</p>
-<code>ruby racing_snakes.rb</cold>
+<code>ruby main.rb</cold>
 <h2>The rules</h2>
 <p>A game for two players: Move your snake with either W, S, A, D keys or the arrow keys. Eat the snake food to grow. The first snake to crash loses. Two snakes colliding directly head-on counts as a tie. Press space to pause and esc to close.</p>
 <h1>Changes Made</h1>
