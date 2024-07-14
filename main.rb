@@ -14,24 +14,18 @@ GRID_SIZE = 30
 GRID_WIDTH = Window.width/GRID_SIZE
 GRID_HEIGHT = Window.height/GRID_SIZE
 NODE_SIZE = GRID_SIZE
+
 GAME_TITLE = 'SNAKE RACE'
 PROMPT = 'Turn: '
 TEXT_COLOR = 'white'
 PLAYER_ONE_KEYS = 'A, W, S, D'
 PLAYER_TWO_KEYS = 'Arrow Keys'
 
-# using color keywords so can id players in feedback.
-PLAYER_ONE_COLORS = ['yellow', 'orange', 'red', ]
-PLAYER_TWO_COLORS = ['fuchsia', 'blue', 'green', ]
-
 
 clock = GameClock.new()
-p1color = PLAYER_ONE_COLORS.sample
-p2color = PLAYER_TWO_COLORS.sample
-#twoPlayers = false
-player2 = Snake.new(p1color, 2)
-player1 = Snake.new(p2color, 1)
-game = Game.new(p1color, p2color)
+player1 = Snake.new(1)
+player2 = Snake.new(2)
+game = Game.new(player1.color, player2.color)
 player2.draw
 player1.draw
 
@@ -96,11 +90,9 @@ on :key_down do |event|
 
 # restarts the game, otherwise the space key just pauses it
   if game.finished? && event.key == 'space'
-    p1color = PLAYER_ONE_COLORS.sample
-    p2color = PLAYER_TWO_COLORS.sample
-    player2 = Snake.new(p1color, 1)
-    player1 = Snake.new(p2color, 2)
-    game = Game.new(p1color, p2color)
+    player2 = Snake.new(1)
+    player1 = Snake.new(2)
+    game = Game.new(player1.color, player2.color)
   end
 
   close if event.key == 'escape'
