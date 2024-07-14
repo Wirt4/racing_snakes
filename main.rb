@@ -39,22 +39,23 @@ update do
 
   unless game.finished? or game.menu?
     game.tie(game.is_tie?(player2, player1))
-    player2.move
     player1.move
+    player2.move
     clock.increment()
   end
-  player2.draw
   player1.draw
+  player2.draw
   game.draw
 
-  if game.snake_eat_food?(player2.x, player2.y)
-    player2.grow
-    game.respawn_food(player2.position + player1.position)
-    clock.reset()
-  end
+  player1Eats = game.snake_eat_food?(player1.x, player1.y)
+  player2Eats = game.snake_eat_food?(player2.x, player2.y)
 
-  if game.snake_eat_food?(player1.x, player1.y)
-    player1.grow
+  if player1Eats or player2Eats
+    if player1Eats
+      player1.grow
+    else
+      player2.grow
+    end
     game.respawn_food(player2.position + player1.position)
     clock.reset()
   end

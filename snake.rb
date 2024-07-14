@@ -1,3 +1,5 @@
+load 'button.rb'
+
 class Snake
 # using color keywords so can id players in feedback.
   PLAYER_ONE_COLORS = ['yellow', 'orange', 'red', ]
@@ -8,7 +10,7 @@ class Snake
   # snakes are initialized with a color and integer, player one of two
   # colors are ruby2d keywords
   def initialize(player)
-    @player_id = player
+    @playerButton = Button.new(player)
     xpos = if player == 1
              GRID_WIDTH * 2 / 3
            else
@@ -61,18 +63,11 @@ class Snake
   end
 
   def detect_key(keystroke)
-    if @player_id ==1
-      new_direction('left') if keystroke == 'left' && direction != 'right'
-      new_direction('right') if keystroke== 'right' && direction != 'left'
-      new_direction('up') if keystroke == 'up' && direction != 'down'
-      new_direction('down') if keystroke == 'down' && direction != 'up'
-      return
-    end
 
-    new_direction('left') if keystroke == 'a' && direction != 'right'
-    new_direction('right') if keystroke == 'd' && direction != 'left'
-    new_direction('up') if keystroke== 'w' && direction != 'down'
-    new_direction('down') if keystroke == 's' && direction != 'up'
+      new_direction('left') if keystroke == @playerButton.left && direction != 'right'
+      new_direction('right') if keystroke == @playerButton.right && direction != 'left'
+      new_direction('up') if keystroke == @playerButton.up && direction != 'down'
+      new_direction('down') if keystroke == @playerButton.down && direction != 'up'
   end
 
   # moves snake along given direction once per clock tick
