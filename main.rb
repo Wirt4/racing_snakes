@@ -23,8 +23,10 @@ PLAYER_TWO_KEYS = 'Arrow Keys'
 
 
 clock = GameClock.new()
+
 player1 = Snake.new(1)
 player2 = Snake.new(2)
+
 game = Game.new(player1.color, player2.color)
 player2.draw
 player1.draw
@@ -78,15 +80,8 @@ end
 #player controls, is up, down, left, right /AWSD
 on :key_down do |event|
 
-  player1.new_direction('left') if event.key == 'left' && player1.direction != 'right'
-  player1.new_direction('right') if event.key == 'right' && player1.direction != 'left'
-  player1.new_direction('up') if event.key == 'up' && player1.direction != 'down'
-  player1.new_direction('down') if event.key == 'down' && player1.direction != 'up'
-
-  player2.new_direction('left') if event.key == 'a' && player2.direction != 'right'
-  player2.new_direction('right') if event.key == 'd' && player2.direction != 'left'
-  player2.new_direction('up') if event.key == 'w' && player2.direction != 'down'
-  player2.new_direction('down') if event.key == 's' && player2.direction != 'up'
+  player1.detect_key(event.key)
+  player2.detect_key(event.key)
 
 # restarts the game, otherwise the space key just pauses it
   if game.finished? && event.key == 'space'
