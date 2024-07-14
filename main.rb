@@ -14,24 +14,20 @@ GRID_SIZE = 30
 GRID_WIDTH = Window.width/GRID_SIZE
 GRID_HEIGHT = Window.height/GRID_SIZE
 NODE_SIZE = GRID_SIZE
+
 GAME_TITLE = 'SNAKE RACE'
 PROMPT = 'Turn: '
 TEXT_COLOR = 'white'
 PLAYER_ONE_KEYS = 'A, W, S, D'
 PLAYER_TWO_KEYS = 'Arrow Keys'
 
-# using color keywords so can id players in feedback.
-PLAYER_ONE_COLORS = ['yellow', 'orange', 'red', ]
-PLAYER_TWO_COLORS = ['fuchsia', 'blue', 'green', ]
-
 
 clock = GameClock.new()
-p1color = PLAYER_ONE_COLORS.sample
-p2color = PLAYER_TWO_COLORS.sample
-#twoPlayers = false
-player2 = Snake.new(p1color, 2)
-player1 = Snake.new(p2color, 1)
-game = Game.new(p1color, p2color)
+
+player1 = Snake.new(1)
+player2 = Snake.new(2)
+
+game = Game.new(player1.color, player2.color)
 player2.draw
 player1.draw
 
@@ -43,22 +39,23 @@ update do
 
   unless game.finished? or game.menu?
     game.tie(game.is_tie?(player2, player1))
-    player2.move
     player1.move
+    player2.move
     clock.increment()
   end
-  player2.draw
   player1.draw
+  player2.draw
   game.draw
 
-  if game.snake_eat_food?(player2.x, player2.y)
-    player2.grow
-    game.respawn_food(player2.position + player1.position)
-    clock.reset()
-  end
+  player1Eats = game.snake_eat_food?(player1.x, player1.y)
+  player2Eats = game.snake_eat_food?(player2.x, player2.y)
 
-  if game.snake_eat_food?(player1.x, player1.y)
-    player1.grow
+  if player1Eats or player2Eats
+    if player1Eats
+      player1.grow
+    else
+      player2.grow
+    end
     game.respawn_food(player2.position + player1.position)
     clock.reset()
   end
@@ -84,23 +81,14 @@ end
 #player controls, is up, down, left, right /AWSD
 on :key_down do |event|
 
-  player1.new_direction('left') if event.key == 'left' && player1.direction != 'right'
-  player1.new_direction('right') if event.key == 'right' && player1.direction != 'left'
-  player1.new_direction('up') if event.key == 'up' && player1.direction != 'down'
-  player1.new_direction('down') if event.key == 'down' && player1.direction != 'up'
-
-  player2.new_direction('left') if event.key == 'a' && player2.direction != 'right'
-  player2.new_direction('right') if event.key == 'd' && player2.direction != 'left'
-  player2.new_direction('up') if event.key == 'w' && player2.direction != 'down'
-  player2.new_direction('down') if event.key == 's' && player2.direction != 'up'
+  player1.detect_key(event.key)
+  player2.detect_key(event.key)
 
 # restarts the game, otherwise the space key just pauses it
   if game.finished? && event.key == 'space'
-    p1color = PLAYER_ONE_COLORS.sample
-    p2color = PLAYER_TWO_COLORS.sample
-    player2 = Snake.new(p1color, 1)
-    player1 = Snake.new(p2color, 2)
-    game = Game.new(p1color, p2color)
+    player2 = Snake.new(1)
+    player1 = Snake.new(2)
+    game = Game.new(player1.color, player2.color)
   end
 
   close if event.key == 'escape'

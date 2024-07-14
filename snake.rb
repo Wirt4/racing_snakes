@@ -1,19 +1,31 @@
+load 'button.rb'
+
 class Snake
+# using color keywords so can id players in feedback.
+  PLAYER_ONE_COLORS = ['yellow', 'orange', 'red', ]
+  PLAYER_TWO_COLORS = ['fuchsia', 'blue', 'green', ]
 
   attr_writer :new_direction
   attr_writer :z
   # snakes are initialized with a color and integer, player one of two
   # colors are ruby2d keywords
-  def initialize(color, player)
+  def initialize(player)
+    @playerButton = Button.new(player)
     xpos = if player == 1
              GRID_WIDTH * 2 / 3
            else
              GRID_WIDTH / 3
            end
+
+    @snake_color = if player == 1
+            PLAYER_ONE_COLORS.sample
+          else
+            PLAYER_TWO_COLORS.sample
+          end
+
     @position = [[xpos, GRID_HEIGHT - 3], [xpos, GRID_HEIGHT - 4], [xpos, GRID_HEIGHT - 5]]
     @direction = 'up'
     @growing = @turned = false
-    @snake_color = color
     @z = 0
   end
   # determines if the snake hit the wall of the other snake
@@ -23,7 +35,11 @@ class Snake
     crash?
   end
 
-  def snake_color
+  def color
+    @snake_color
+  end
+
+  def color_name
     @snake_color.capitalize
   end
   # draws a snake with a gradient, illuminated effect
@@ -44,6 +60,14 @@ class Snake
   def new_direction(dir)
     @direction = dir unless @turned
     @turned = true
+  end
+
+  def detect_key(keystroke)
+
+      new_direction('left') if keystroke == @playerButton.left && direction != 'right'
+      new_direction('right') if keystroke == @playerButton.right && direction != 'left'
+      new_direction('up') if keystroke == @playerButton.up && direction != 'down'
+      new_direction('down') if keystroke == @playerButton.down && direction != 'up'
   end
 
   # moves snake along given direction once per clock tick

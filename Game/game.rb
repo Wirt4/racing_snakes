@@ -64,7 +64,7 @@ class Game
              else
                p1
              end
-    winner.snake_color.concat(' Wins')
+    winner.color_name.concat(' Wins')
   end
 
 # detects a collision, either snake hit snake or snake hits self
