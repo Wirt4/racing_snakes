@@ -5,8 +5,8 @@ class Board
 # initializes with the colors of the players so can print the instructions unobtrusively
 # colors are ruby2d keywords
   def initialize(p1color, p2color)
-    @food_x = GRID_WIDTH / 2
-    @food_y = GRID_HEIGHT / 3
+    @food_x = Settings::GRID_WIDTH / 2
+    @food_y = Settings::GRID_HEIGHT / 3
     @finished = false
     @food_color = 'white'
     @paused = true
@@ -45,7 +45,7 @@ class Board
 # displays the instructions, menu screen and food
   def draw
     unless finished? || menu?
-      Square.new(x: @food_x* GRID_SIZE, y: @food_y * GRID_SIZE, size: NODE_SIZE, color: @food_color)
+      Square.new(x: @food_x* Settings::GRID_SIZE, y: @food_y * Settings::GRID_SIZE, size: Settings::NODE_SIZE, color: @food_color)
     end
 
     if menu?
@@ -53,8 +53,8 @@ class Board
 
       drop_shadow('(press space)',  Settings::TEXT_COLOR, 350, 425, 30, 2)
     end
-    drop_shadow(Constants::PROMPT + ' ' + Constants::PLAYER_ONE_KEYS,  @p1color, 10, GRID_HEIGHT-GRID_SIZE, 30,2)
-    drop_shadow(Constants::PROMPT + ' '+ Constants::PLAYER_TWO_KEYS, @p2color, 1920 - 250, GRID_HEIGHT-GRID_SIZE, 30,2)
+    drop_shadow(Constants::PROMPT + ' ' + Constants::PLAYER_ONE_KEYS,  @p1color, 10, Settings::GRID_HEIGHT-Settings::GRID_SIZE, 30,2)
+    drop_shadow(Constants::PROMPT + ' '+ Constants::PLAYER_TWO_KEYS, @p2color, 1920 - 250, Settings::GRID_HEIGHT-Settings::GRID_SIZE, 30,2)
   end
 
 # returns a string of who wins
@@ -87,11 +87,11 @@ class Board
 
 # want to respawn the food in any location that is not occupied by a snake
   def respawn_food(pos)
-    @food_x = rand(GRID_WIDTH)
-    @food_y = rand(GRID_HEIGHT)
+    @food_x = rand(Settings::GRID_WIDTH)
+    @food_y = rand(Settings::GRID_HEIGHT)
     while pos.include?([@food_x, @food_y])
-      @food_x = rand(GRID_WIDTH)
-      @food_y = rand(GRID_HEIGHT)
+      @food_x = rand(Settings::GRID_WIDTH)
+      @food_y = rand(Settings::GRID_HEIGHT)
     end
   end
 

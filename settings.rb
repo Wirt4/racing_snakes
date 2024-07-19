@@ -13,4 +13,6 @@ module Settings
   GRID_WIDTH = WIDTH/GRID_SIZE
   GRID_HEIGHT = HEIGHT/GRID_SIZE
   NODE_SIZE = GRID_SIZE
+  PLAYER_ONE_COLORS = ['yellow', 'orange', 'red', ]
+  PLAYER_TWO_COLORS = ['fuchsia', 'blue', 'green', ]
 end

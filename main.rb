@@ -11,16 +11,13 @@ set height: Settings::HEIGHT
 set fps_cap: Settings::FPS
 set fullscreen: Settings::FULLSCREEN
 
-GRID_SIZE = Settings::SQUARE_SIZE
-GRID_WIDTH = Settings::WIDTH/GRID_SIZE
-GRID_HEIGHT = Settings::HEIGHT/GRID_SIZE
-NODE_SIZE = GRID_SIZE
-
 
 clock = GameClock.new()
-player1 = Snake.new(1)
-player2 = Snake.new(2)
-game = Board.new(player1.color, player2.color)
+player1_color = Settings::PLAYER_ONE_COLORS.sample
+player1 = Snake.new(1, player1_color)
+player2_color = Settings::PLAYER_TWO_COLORS.sample
+player2 = Snake.new(2, player2_color)
+game = Board.new(player1_color, player2_color)
 
 player2.draw
 player1.draw
@@ -35,6 +32,7 @@ update do
     player2.move
     clock.increment()
   end
+
   player1.draw
   player2.draw
   game.draw
@@ -78,9 +76,11 @@ on :key_down do |event|
 
 # restarts the game, otherwise the space key just pauses it
   if game.finished? && event.key == Keyboard::SPACE
-    player2 = Snake.new(1)
-    player1 = Snake.new(2)
-    game = Board.new(player1.color, player2.color)
+    player1_color = Settings::PLAYER_ONE_COLORS.sample
+    player1 = Snake.new(1, player1_color)
+    player2_color = Settings::PLAYER_TWO_COLORS.sample
+    player2 = Snake.new(2, player2_color)
+    game = Board.new(player1_color, player2_color)
   end
 
   close if event.key == Keyboard::ESCAPE

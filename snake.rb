@@ -3,14 +3,12 @@ load 'settings.rb'
 
 class Snake
 # using color keywords so can id players in feedback.
-  PLAYER_ONE_COLORS = ['yellow', 'orange', 'red', ]
-  PLAYER_TWO_COLORS = ['fuchsia', 'blue', 'green', ]
 
   attr_writer :new_direction
   attr_writer :z
   # snakes are initialized with a color and integer, player one of two
   # colors are ruby2d keywords
-  def initialize(player)
+  def initialize(player, color)
     @playerButton = Button.new(player)
     xpos = if player == 1
              Settings::GRID_WIDTH * 2 / 3
@@ -18,11 +16,7 @@ class Snake
              Settings::GRID_WIDTH / 3
            end
 
-    @snake_color = if player == 1
-            PLAYER_ONE_COLORS.sample
-          else
-            PLAYER_TWO_COLORS.sample
-          end
+    @snake_color = color
 
     @position = [[xpos, Settings::GRID_HEIGHT - 3], [xpos, Settings::GRID_HEIGHT - 4], [xpos, Settings::GRID_HEIGHT - 5]]
     @direction = 'up'
