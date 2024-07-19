@@ -30,6 +30,21 @@ RSpec.describe Game do
       Game.new()
       expect(Board).to have_received(:new)
     end
+    it "gurantee the board object is called with the same colors as the snake objects"do
+      snake_args = []
+
+      allow(Snake).to receive(:new) do | *args|
+        snake_args << args
+        double(Snake)
+      end
+
+      allow(Board).to receive(:new)
+
+      Game.new
+
+      expect(Board).to have_received(:new).with(snake_args[0][1], snake_args[1][1])
+
+  end
   end
   describe '#draw_snakes' do
     it 'calling draw_snakes causes each snake to draw'do
