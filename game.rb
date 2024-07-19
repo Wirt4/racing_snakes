@@ -4,6 +4,7 @@ load 'snake.rb'
 class Game
   attr_reader :player1
   attr_reader :player2
+  attr_reader :board
 
   def initialize()
     @clock = GameClock.new()
@@ -25,5 +26,10 @@ class Game
 
   def get_player_two_color()
     return Settings::PLAYER_TWO_COLORS.sample
+  end
+
+  def draw_board()
+    draw_snakes
+    @board.draw
   end
 end

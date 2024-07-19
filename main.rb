@@ -11,7 +11,7 @@ set height: Settings::HEIGHT
 set fps_cap: Settings::FPS
 set fullscreen: Settings::FULLSCREEN
 
-
+#should be covered by constructor
 clock = GameClock.new()
 player1_color = Settings::PLAYER_ONE_COLORS.sample
 player1 = Snake.new(1, player1_color)
@@ -19,6 +19,7 @@ player2_color = Settings::PLAYER_TWO_COLORS.sample
 player2 = Snake.new(2, player2_color)
 game = Board.new(player1_color, player2_color)
 
+#should be encapsulated by draw_snakes method
 player2.draw
 player1.draw
 

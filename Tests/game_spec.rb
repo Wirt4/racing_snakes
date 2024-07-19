@@ -41,10 +41,12 @@ RSpec.describe Game do
       allow(Board).to receive(:new)
 
       Game.new
+      snake_color_1 = snake_args[0][1]
+      snake_color_2=snake_args[1][1]
 
-      expect(Board).to have_received(:new).with(snake_args[0][1], snake_args[1][1])
+      expect(Board).to have_received(:new).with(snake_color_1, snake_color_2)
 
-  end
+    end
   end
   describe '#draw_snakes' do
     it 'calling draw_snakes causes each snake to draw'do
@@ -56,6 +58,26 @@ RSpec.describe Game do
 
       expect(game.player1).to have_received(:draw)
       expect(game.player2).to have_received(:draw)
+    end
+  end
+  describe'#draw_board'do
+  it'drawing the board should call draw_snakes' do
+      game = Game.new
+      allow(game).to receive(:draw_snakes)
+      allow(game.board).to receive(:draw)
+
+      game.draw_board
+
+      expect(game).to have_received(:draw_snakes)
+    end
+    it'drawing the board should call Board.draw' do
+      game = Game.new
+      allow(game).to receive(:draw_snakes)
+      allow(game.board).to receive(:draw)
+
+      game.draw_board
+
+      expect(game.board).to have_received(:draw)
     end
   end
 end
