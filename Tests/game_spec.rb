@@ -14,13 +14,16 @@ RSpec.describe Game do
     end
     it"it initializes a new player 1 snake and new player 2 snake"do
       snake_args = []
+
       allow(Snake).to receive(:new) do | *args|
-        snake_args<< args
+        snake_args << args
         double(Snake)
       end
-      allow(Snake).to receive(:color)
+
       Game.new
-      expect(snake_args).to eq([[PlayerIds::PLAYER_ONE], [PlayerIds::PLAYER_TWO]])
+
+      expect(snake_args[0][0]).to eq(PlayerIds::PLAYER_ONE)
+      expect(snake_args[1][0]).to eq(PlayerIds::PLAYER_TWO)
     end
     it "it creates a new board object"do
       allow(Board).to receive(:new)
