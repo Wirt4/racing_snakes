@@ -1,4 +1,6 @@
-class Game
+load 'constants.rb'
+load 'settings.rb'
+class Board
 
 # initializes with the colors of the players so can print the instructions unobtrusively
 # colors are ruby2d keywords
@@ -23,7 +25,8 @@ class Game
     @tie = bool
   end
 # a cheesy effect, but helps make all the text readable
-  def drop_shadow(txt, txt_color, x_cord, y_cord, txt_size, offset)
+# #todo: implement a coords class
+  def drop_shadow(txt, txt_color, x_cord, y_cord, txt_size=72, offset=2)
     Text.new(txt, color: 'black', x: x_cord + offset, y: y_cord + offset, size: txt_size)
     Text.new(txt, color: txt_color, x: x_cord , y: y_cord, size: txt_size)
   end
@@ -46,12 +49,12 @@ class Game
     end
 
     if menu?
-      drop_shadow(GAME_TITLE, TEXT_COLOR, 70, 350, 72, 2)
+      drop_shadow(Constants::GAME_TITLE, Settings::TEXT_COLOR, 70, 350, 72, 2)
 
-      drop_shadow('(press space)',  TEXT_COLOR, 350, 425, 30, 2)
+      drop_shadow('(press space)',  Settings::TEXT_COLOR, 350, 425, 30, 2)
     end
-    drop_shadow(PROMPT + PLAYER_ONE_KEYS,  @p1color, 10, GRID_HEIGHT-GRID_SIZE, 30,2)
-    drop_shadow(PROMPT + PLAYER_TWO_KEYS, @p2color, 1920 - 250, GRID_HEIGHT-GRID_SIZE, 30,2)
+    drop_shadow(Constants::PROMPT + ' ' + Constants::PLAYER_ONE_KEYS,  @p1color, 10, GRID_HEIGHT-GRID_SIZE, 30,2)
+    drop_shadow(Constants::PROMPT + ' '+ Constants::PLAYER_TWO_KEYS, @p2color, 1920 - 250, GRID_HEIGHT-GRID_SIZE, 30,2)
   end
 
 # returns a string of who wins
