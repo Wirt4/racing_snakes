@@ -1,3 +1,4 @@
+load 'colors.rb'
 module Settings
   WIDTH = 1920
   HEIGHT = 1080
@@ -13,6 +14,6 @@ module Settings
   GRID_WIDTH = WIDTH/GRID_SIZE
   GRID_HEIGHT = HEIGHT/GRID_SIZE
   NODE_SIZE = GRID_SIZE
-  PLAYER_ONE_COLORS = ['yellow', 'orange', 'red', ]
-  PLAYER_TWO_COLORS = ['fuchsia', 'blue', 'green', ]
+  PLAYER_ONE_COLORS = [Colors::YELLOW, Colors::ORANGE, Colors::RED, ]
+  PLAYER_TWO_COLORS = [Colors::FUCHSIA, Colors::BLUE, Colors::GREEN, ]
 end
