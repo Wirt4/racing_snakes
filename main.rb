@@ -3,12 +3,13 @@ require 'ruby2d'
 load 'Game/game.rb'
 load 'Game/game_clock.rb'
 load 'snake.rb'
+load 'settings.rb'
 
-set background: 'black'
-set width: 1920
-set height: 1080
-set fps_cap: 20
-set fullscreen: 'true'
+set background: Settings::BACKGROUND
+set width: Settings::WIDTH
+set height: Settings::HEIGHT
+set fps_cap: Settings::FPS
+set fullscreen: Settings::FULLSCREEN
 
 GRID_SIZE = 30
 GRID_WIDTH = Window.width/GRID_SIZE
