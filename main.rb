@@ -1,9 +1,9 @@
 require 'ruby2d'
-
 load 'board.rb'
 load 'game_clock.rb'
 load 'snake.rb'
 load 'settings.rb'
+load 'keyboard_buttons.rb'
 
 set background: Settings::BACKGROUND
 set width: Settings::WIDTH
@@ -61,11 +61,11 @@ update do
 # prints out the winner of the game if it ends
   if game.collision?(player2.position, player1.position)
     game.finish
-    game.drop_shadow(game.winner(player2, player1), Settings::TEXT_COLOR, 70, 350)
+    game.drop_shadow(game.winner(player2, player1), Settings::TEXT_COLOR, Settings::WINNER_MSG_X, Settings::WINNER_MSG_Y)
     if game.p1_winner?
-      player1.z = 5
+      player1.z = Settings::WINNER_Z_NDX
     else
-      player2.z = 5
+      player2.z = Settings::WINNER_Z_NDX
     end
   end
 end
@@ -77,13 +77,13 @@ on :key_down do |event|
   player2.detect_key(event.key)
 
 # restarts the game, otherwise the space key just pauses it
-  if game.finished? && event.key == 'space'
+  if game.finished? && event.key == Keyboard::SPACE
     player2 = Snake.new(1)
     player1 = Snake.new(2)
     game = Board.new(player1.color, player2.color)
   end
 
-  close if event.key == 'escape'
-  game.pause if event.key =='space'
+  close if event.key == Keyboard::ESCAPE
+  game.pause if event.key ==Keyboard::SPACE
 end
 show
