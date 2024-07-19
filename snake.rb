@@ -1,4 +1,5 @@
 load 'button.rb'
+load 'settings.rb'
 
 class Snake
 # using color keywords so can id players in feedback.
@@ -12,9 +13,9 @@ class Snake
   def initialize(player)
     @playerButton = Button.new(player)
     xpos = if player == 1
-             GRID_WIDTH * 2 / 3
+             Settings::GRID_WIDTH * 2 / 3
            else
-             GRID_WIDTH / 3
+             Settings::GRID_WIDTH / 3
            end
 
     @snake_color = if player == 1
@@ -23,7 +24,7 @@ class Snake
             PLAYER_TWO_COLORS.sample
           end
 
-    @position = [[xpos, GRID_HEIGHT - 3], [xpos, GRID_HEIGHT - 4], [xpos, GRID_HEIGHT - 5]]
+    @position = [[xpos, Settings::GRID_HEIGHT - 3], [xpos, Settings::GRID_HEIGHT - 4], [xpos, Settings::GRID_HEIGHT - 5]]
     @direction = 'up'
     @growing = @turned = false
     @z = 0
@@ -47,8 +48,8 @@ class Snake
     opacity = 0.4
     @position.reverse.each do |pos|
       opacity *= 0.8
-      Square.new(x: pos[0] * GRID_SIZE, y: pos[1] * GRID_SIZE, size: NODE_SIZE, color: @snake_color, z: @z) # the regular snake
-      Square.new(x: pos[0] * GRID_SIZE, y: pos[1] * GRID_SIZE, size: NODE_SIZE, color: 'white' , opacity: opacity, z: @z + 1) # a lighting effect
+      Square.new(x: pos[0] * Settings::GRID_SIZE, y: pos[1] * Settings::GRID_SIZE, size: Settings::NODE_SIZE, color: @snake_color, z: @z) # the regular snake
+      Square.new(x: pos[0] * Settings::GRID_SIZE, y: pos[1] * Settings::GRID_SIZE, size: Settings::NODE_SIZE, color: 'white' , opacity: opacity, z: @z + 1) # a lighting effect
     end
   end
 
@@ -88,7 +89,7 @@ class Snake
 
   # creates the "infinite canvas" feel
   def new_coords(x,y)
-    [x % GRID_WIDTH, y % GRID_HEIGHT]
+    [x % Settings::GRID_WIDTH, y % Settings::GRID_HEIGHT]
   end
 
   # returns all slots occupied by the snake minus the head

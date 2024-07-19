@@ -12,8 +12,8 @@ set fps_cap: Settings::FPS
 set fullscreen: Settings::FULLSCREEN
 
 GRID_SIZE = Settings::SQUARE_SIZE
-GRID_WIDTH = Window.width/GRID_SIZE
-GRID_HEIGHT = Window.height/GRID_SIZE
+GRID_WIDTH = Settings::WIDTH/GRID_SIZE
+GRID_HEIGHT = Settings::HEIGHT/GRID_SIZE
 NODE_SIZE = GRID_SIZE
 
 
