@@ -1,5 +1,6 @@
 load 'game_clock.rb'
 load 'snake.rb'
+load 'player_ids.rb'
 
 class Game
   attr_reader :player1
