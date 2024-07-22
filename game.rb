@@ -74,7 +74,38 @@ class Game
   end
 
   def is_collision?()
-    return @board.collision?([[42, 33], [42, 32], [42, 31]], [[21, 33], [21, 32], [21, 31]])
+    return @board.collision?(@player1.position, @player2.position)
   end
 
+  def stop_game()
+    @board.finish
+    winner = @board.winner(@player1, @player2)
+    @board.drop_shadow(winner,  Settings::TEXT_COLOR, Settings::WINNER_MSG_X, Settings::WINNER_MSG_Y)
+    if (@board.p1_winner?)
+      @player1.set_z(Settings::WINNER_Z_NDX)
+    else
+      @player2.set_z(Settings::WINNER_Z_NDX)
+    end
+  end
+
+  def detect_key(k)
+    @player1.detect_key(k)
+    @player2.detect_key(k)
+
+    if (board.finished? && k == Keyboard::SPACE)
+      player1_color = Settings::PLAYER_ONE_COLORS.sample
+      player2_color = Settings::PLAYER_TWO_COLORS.sample
+      @player1 = Snake.new(1, player1_color)
+      @player2 = Snake.new(2, player2_color)
+      @board = Board.new(player1_color, player2_color)
+    end
+
+    if (k == Keyboard::SPACE)
+      pause
+    end
+  end
+
+  def pause
+    @board.pause
+  end
 end

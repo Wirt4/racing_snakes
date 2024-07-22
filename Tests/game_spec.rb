@@ -4,6 +4,8 @@ load 'game_clock.rb'
 load 'snake.rb'
 load 'player_ids.rb'
 load 'board.rb'
+require('ruby2d')
+load 'keyboard_buttons.rb'
 
 RSpec.describe Game do
   describe "#initialize" do
@@ -319,6 +321,197 @@ RSpec.describe Game do
       game.is_collision?
 
       expect(game.board).to have_received(:collision?).with(game.player1.position(), game.player2.position())
+    end
+  end
+  describe'#stop_game' do
+    it'board.finish is called'do
+      game = Game.new
+      allow(game.board).to receive(:finish)
+
+      game.stop_game
+
+      expect(game.board).to have_received(:finish)
+    end
+    it'board.winner is called'do
+      game = Game.new
+      allow(game.board).to receive(:winner)
+
+      game.stop_game
+
+      expect(game.board).to have_received(:winner).with(game.player1, game.player2)
+    end
+    it'board.dropShadow is called with player 1'do
+      game = Game.new
+      allow(game.board).to receive(:drop_shadow)
+      allow(game.board).to receive(:winner).and_return('player 1')
+      game.stop_game
+
+      expect(game.board).to have_received(:drop_shadow).with(game.board.winner,  Settings::TEXT_COLOR, Settings::WINNER_MSG_X, Settings::WINNER_MSG_Y)
+    end
+    it 'player one is the winner, and player one Z is set with the Z index' do
+      game = Game.new
+      allow(game.player1).to receive(:set_z)
+      allow(game.board).to receive(:p1_winner?).and_return(true)
+
+      game.stop_game
+
+      expect(game.player1).to have_received(:set_z).with(Settings::WINNER_Z_NDX)
+    end
+    it "player one is not the winner, and player one Z isn't set with the Z index" do
+      game = Game.new
+      allow(game.player1).to receive(:set_z)
+      allow(game.board).to receive(:p1_winner?).and_return(false)
+
+      game.stop_game
+
+      expect(game.player1).not_to have_received(:set_z).with(Settings::WINNER_Z_NDX)
+    end
+
+    it "player one is not the winner, and player two Z isnset with the Z index" do
+      game = Game.new
+      allow(game.player2).to receive(:set_z)
+      allow(game.board).to receive(:p1_winner?).and_return(false)
+
+      game.stop_game
+
+      expect(game.player2).to have_received(:set_z).with(Settings::WINNER_Z_NDX)
+    end
+
+    it "player one is  the winner, and player two Z isn't set with the Z index" do
+      game = Game.new
+      allow(game.player2).to receive(:set_z)
+      allow(game.board).to receive(:p1_winner?).and_return(true)
+
+      game.stop_game
+
+      expect(game.player2).not_to have_received(:set_z).with(Settings::WINNER_Z_NDX)
+    end
+  end
+  describe '#detect_key'do
+    it 'player1.detectKey called' do
+      game = Game.new
+      snake_args=[]
+      allow(game.player1).to receive(:detect_key) do |*args|
+        snake_args << args
+      end
+
+      k = Keyboard::SPACE
+
+      game.detect_key(k)
+
+      expect(snake_args[0][0]).to eq(k)
+    end
+    it 'player1.detectKey called,  arrow down' do
+      game = Game.new
+      snake_args = []
+      allow(game.player1).to receive(:detect_key) do |*args|
+        snake_args << args
+      end
+      k = Keyboard::DOWN
+
+      game.detect_key(k)
+
+      expect(snake_args[0][0]).to eq(k)
+    end
+    it 'player2.detectKey called,  W' do
+      game = Game.new
+      snake_args =[]
+      allow(game.player1).to receive(:detect_key) do |*args|
+        snake_args << args
+      end
+      k = Keyboard::W
+      allow(Board).to receive(:new)
+
+      game.detect_key(k)
+
+      expect(snake_args[0][0]).to eq(k)
+    end
+    it 'player2.detectKey called,  A' do
+      game = Game.new
+      snake_args =[]
+      allow(game.player1).to receive(:detect_key) do |*args|
+        snake_args << args
+      end
+      k = Keyboard::A
+      allow(Board).to receive(:new)
+
+      game.detect_key(k)
+
+      expect(snake_args[0][0]).to eq(k)
+    end
+    it 'Key is space, game is finished' do
+      game = Game.new
+      k = Keyboard::SPACE
+      allow(game.board).to receive(:finished?).and_return(true)
+      allow(game).to receive(:pause)
+
+      snake_args = []
+
+      allow(Snake).to receive(:new) do | *args|
+        snake_args << args
+        double(Snake)
+      end
+
+      allow(Board).to receive(:new)
+
+      game.detect_key(k)
+
+      expect(Board).to have_received(:new).with(snake_args[0][1], snake_args[1][1])
+    end
+    it 'Key is space, game is not finished' do
+      game = Game.new
+      k = Keyboard::SPACE
+      allow(game.board).to receive(:finished?).and_return(false)
+
+      allow(Snake).to receive(:new)
+      allow(Board).to receive(:new)
+
+      game.detect_key(k)
+
+      expect(Board).not_to have_received(:new)
+      expect(Snake).not_to have_received(:new)
+    end
+    it 'Key is left, game is  finished' do
+      game = Game.new
+      k = Keyboard::LEFT
+      allow(game.board).to receive(:finished?).and_return(true)
+      allow(game).to receive(:pause)
+
+      allow(Snake).to receive(:new)
+      allow(Board).to receive(:new)
+
+      game.detect_key(k)
+
+      expect(Board).not_to have_received(:new)
+      expect(Snake).not_to have_received(:new)
+    end
+    it 'Key is space, Game.pause is called' do
+      game = Game.new
+      k = Keyboard::SPACE
+
+      allow(game).to receive(:pause)
+
+      game.detect_key(k)
+
+      expect(game).to have_received(:pause)
+    end
+    it 'Key is not space, Game.pause is not called' do
+      game = Game.new
+      k = Keyboard::A
+
+      allow(game).to receive(:pause)
+
+      game.detect_key(k)
+
+      expect(game).not_to have_received(:pause)
+    end
+  end
+  describe '#pause'do
+    it 'Board pause is called' do
+      game = Game.new
+      allow(game.board).to receive(:pause)
+      game.pause
+      expect(game.board).to have_received(:pause)
     end
   end
 end

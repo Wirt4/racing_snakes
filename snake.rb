@@ -5,7 +5,6 @@ class Snake
 # using color keywords so can id players in feedback.
 
   attr_writer :new_direction
-  attr_writer :z
   attr_writer :position
 
   # snakes are initialized with a color and integer, player one of two
@@ -111,6 +110,10 @@ class Snake
 
   def grow
     @growing = true
+  end
+
+  def set_z(z)
+    @z = z
   end
 
   # returns true  if the snake has crashed into itself
