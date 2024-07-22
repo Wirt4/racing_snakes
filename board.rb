@@ -21,9 +21,6 @@ class Board
     @p1_winner
   end
 
-  def tie(bool)
-    @tie = bool
-  end
 # a cheesy effect, but helps make all the text readable
 # #todo: implement a coords class
   def drop_shadow(txt, txt_color, x_cord, y_cord, txt_size=72, offset=2)
@@ -32,14 +29,16 @@ class Board
   end
 
 # need to detect one space ahead in the case of a head - on collision
-  def is_tie?(p1, p2)
+  def is_tie(p1, p2)
     if p1.head[0]==p2.head[0]
-      return tie_lemma?(1, p1, p2,'up', 'down')
+      @tie = tie_lemma?(1, p1, p2,'up', 'down')
+      return
     end
     if p1.head[1] == p2.head[1]
-      return tie_lemma?(0, p1, p2, 'left', 'right')
+      @tie = tie_lemma?(0, p1, p2, 'left', 'right')
+      return
     end
-    false
+    @tie = false
   end
 
 # displays the instructions, menu screen and food
@@ -81,8 +80,8 @@ class Board
     @paused = @paused ? false : true
   end
 
-  def snake_eat_food?(x, y)
-    @food_x == x && @food_y == y
+  def snake_eat_food?(snake)
+    @food_x == snake.x && @food_y == snake.y
   end
 
 # want to respawn the food in any location that is not occupied by a snake

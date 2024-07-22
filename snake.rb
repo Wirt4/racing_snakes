@@ -6,6 +6,8 @@ class Snake
 
   attr_writer :new_direction
   attr_writer :z
+  attr_writer :position
+
   # snakes are initialized with a color and integer, player one of two
   # colors are ruby2d keywords
   def initialize(player, color)

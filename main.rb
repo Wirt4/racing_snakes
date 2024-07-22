@@ -27,21 +27,25 @@ player1.draw
 update do
   clear
 
+  #replace with is_paused? method
   unless game.finished? or game.menu?
-    game.tie(game.is_tie?(player2, player1))
+    #replace with move() method
+    game.is_tie(player2, player1)
     player1.move
     player2.move
     clock.increment()
   end
 
+  #replace with draw board method
   player1.draw
   player2.draw
   game.draw
+  player1Eats = game.snake_eat_food?(player1)
+  player2Eats = game.snake_eat_food?(player2)
 
-  player1Eats = game.snake_eat_food?(player1.x, player1.y)
-  player2Eats = game.snake_eat_food?(player2.x, player2.y)
-
+  #player_eats
   if player1Eats or player2Eats
+    #make method: grow_and_spawn_food
     if player1Eats
       player1.grow
     else
