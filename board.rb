@@ -1,10 +1,12 @@
-class Game
+load 'constants.rb'
+load 'settings.rb'
+class Board
 
 # initializes with the colors of the players so can print the instructions unobtrusively
 # colors are ruby2d keywords
   def initialize(p1color, p2color)
-    @food_x = GRID_WIDTH / 2
-    @food_y = GRID_HEIGHT / 3
+    @food_x = Settings::GRID_WIDTH / 2
+    @food_y = Settings::GRID_HEIGHT / 3
     @finished = false
     @food_color = 'white'
     @paused = true
@@ -19,39 +21,39 @@ class Game
     @p1_winner
   end
 
-  def tie(bool)
-    @tie = bool
-  end
 # a cheesy effect, but helps make all the text readable
-  def drop_shadow(txt, txt_color, x_cord, y_cord, txt_size, offset)
+# #todo: implement a coords class
+  def drop_shadow(txt, txt_color, x_cord, y_cord, txt_size=72, offset=2)
     Text.new(txt, color: 'black', x: x_cord + offset, y: y_cord + offset, size: txt_size)
     Text.new(txt, color: txt_color, x: x_cord , y: y_cord, size: txt_size)
   end
 
 # need to detect one space ahead in the case of a head - on collision
-  def is_tie?(p1, p2)
+  def is_tie(p1, p2)
     if p1.head[0]==p2.head[0]
-      return tie_lemma?(1, p1, p2,'up', 'down')
+      @tie = tie_lemma?(1, p1, p2,'up', 'down')
+      return
     end
     if p1.head[1] == p2.head[1]
-      return tie_lemma?(0, p1, p2, 'left', 'right')
+      @tie = tie_lemma?(0, p1, p2, 'left', 'right')
+      return
     end
-    false
+    @tie = false
   end
 
 # displays the instructions, menu screen and food
   def draw
     unless finished? || menu?
-      Square.new(x: @food_x* GRID_SIZE, y: @food_y * GRID_SIZE, size: NODE_SIZE, color: @food_color)
+      Square.new(x: @food_x* Settings::GRID_SIZE, y: @food_y * Settings::GRID_SIZE, size: Settings::NODE_SIZE, color: @food_color)
     end
 
     if menu?
-      drop_shadow(GAME_TITLE, TEXT_COLOR, 70, 350, 72, 2)
+      drop_shadow(Constants::GAME_TITLE, Settings::TEXT_COLOR, 70, 350, 72, 2)
 
-      drop_shadow('(press space)',  TEXT_COLOR, 350, 425, 30, 2)
+      drop_shadow('(press space)',  Settings::TEXT_COLOR, 350, 425, 30, 2)
     end
-    drop_shadow(PROMPT + PLAYER_ONE_KEYS,  @p1color, 10, GRID_HEIGHT-GRID_SIZE, 30,2)
-    drop_shadow(PROMPT + PLAYER_TWO_KEYS, @p2color, 1920 - 250, GRID_HEIGHT-GRID_SIZE, 30,2)
+    drop_shadow(Constants::PROMPT + ' ' + Constants::PLAYER_ONE_KEYS,  @p1color, 10, Settings::GRID_HEIGHT-Settings::GRID_SIZE, 30,2)
+    drop_shadow(Constants::PROMPT + ' '+ Constants::PLAYER_TWO_KEYS, @p2color, 1920 - 250, Settings::GRID_HEIGHT-Settings::GRID_SIZE, 30,2)
   end
 
 # returns a string of who wins
@@ -78,17 +80,17 @@ class Game
     @paused = @paused ? false : true
   end
 
-  def snake_eat_food?(x, y)
-    @food_x == x && @food_y == y
+  def snake_eat_food?(snake)
+    @food_x == snake.x && @food_y == snake.y
   end
 
 # want to respawn the food in any location that is not occupied by a snake
   def respawn_food(pos)
-    @food_x = rand(GRID_WIDTH)
-    @food_y = rand(GRID_HEIGHT)
+    @food_x = rand(Settings::GRID_WIDTH)
+    @food_y = rand(Settings::GRID_HEIGHT)
     while pos.include?([@food_x, @food_y])
-      @food_x = rand(GRID_WIDTH)
-      @food_y = rand(GRID_HEIGHT)
+      @food_x = rand(Settings::GRID_WIDTH)
+      @food_y = rand(Settings::GRID_HEIGHT)
     end
   end
 
