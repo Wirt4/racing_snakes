@@ -16,6 +16,14 @@ class GameClock
   end
 
   def is_food_time()
-    return @tick > 20 * rand(15..20) #need to weed out these magical numbers
+    return @tick > random_cutoff_mark
+  end
+
+  def random_cutoff_mark()
+    return rand_wrapper(300..400)
+  end
+
+  def rand_wrapper(range)
+    return rand(range)
   end
 end
