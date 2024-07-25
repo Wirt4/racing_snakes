@@ -7,10 +7,6 @@ class GameClock
     @tick +=1
   end
 
-  def cutoff()
-    return @cutoff
-  end
-
   def tick
     @tick
   end
