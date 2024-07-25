@@ -1,7 +1,6 @@
 class GameClock
   def initialize(startTime=0)
     @tick = startTime
-    @cutoff = random_cutoff_mark
   end
 
   def increment()
