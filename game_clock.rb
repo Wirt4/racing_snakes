@@ -1,10 +1,15 @@
 class GameClock
   def initialize(startTime=0)
     @tick = startTime
+    @cutoff = random_cutoff_mark
   end
 
   def increment()
     @tick +=1
+  end
+
+  def cutoff()
+    return @cutoff
   end
 
   def tick

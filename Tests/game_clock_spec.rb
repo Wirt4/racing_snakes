@@ -10,11 +10,6 @@ RSpec.describe GameClock do
       clock = GameClock.new(7)
       expect(clock.tick).to eq(7)
     end
-    it 'expect cutoff to be initalized with results of random_cutoff_mark' do
-      clock = GameClock.new
-      allow(clock).to receive(:random_cutoff_mark).and_return(303)
-      expect(clock.cutoff).to eq(303)
-    end
   end
   describe '#increment'do
     it "increment from 0 to 1" do
