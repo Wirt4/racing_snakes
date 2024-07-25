@@ -1,33 +1,40 @@
 load 'button.rb'
 load 'settings.rb'
+load 'directions.rb'
 
 class Snake
 # using color keywords so can id players in feedback.
 
   attr_writer :new_direction
-  attr_writer :position
+  attr_accessor :position
+  attr_reader :turned
+  attr_reader :growing
+  attr_reader :z
 
   # snakes are initialized with a color and integer, player one of two
   # colors are ruby2d keywords
   def initialize(player, color)
     @playerButton = Button.new(player)
-    xpos = if player == 1
-             Settings::GRID_WIDTH * 2 / 3
-           else
-             Settings::GRID_WIDTH / 3
-           end
+
+    xpos = Settings::GRID_WIDTH / 3
+
+    if player== PlayerIds::PLAYER_ONE
+      xpos *= 2
+    end
 
     @snake_color = color
+    @position = []
+    (3..5).each do |n|
+      position.push([xpos, Settings::GRID_HEIGHT - n])
+    end
 
-    @position = [[xpos, Settings::GRID_HEIGHT - 3], [xpos, Settings::GRID_HEIGHT - 4], [xpos, Settings::GRID_HEIGHT - 5]]
-    @direction = 'up'
+    @direction = Directions::UP
     @growing = @turned = false
     @z = 0
   end
   # determines if the snake hit the wall of the other snake
   def hit_wall?(other_player)
-    @position.pop
-    @position += [other_player.head]
+    @position = body + [other_player.head]
     crash?
   end
 
@@ -36,7 +43,7 @@ class Snake
   end
 
   def color_name
-    @snake_color.capitalize
+    return @snake_color.capitalize
   end
   # draws a snake with a gradient, illuminated effect
   def draw
@@ -90,10 +97,6 @@ class Snake
   # returns all slots occupied by the snake minus the head
   def body
     return @position.pop()
-  end
-
-  def position
-    @position
   end
 
   def head
