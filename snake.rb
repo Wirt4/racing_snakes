@@ -5,11 +5,11 @@ load 'directions.rb'
 class Snake
 # using color keywords so can id players in feedback.
 
-  attr_writer :new_direction
   attr_accessor :position
   attr_reader :turned
   attr_reader :growing
   attr_reader :z
+  attr_reader :direction
 
   # snakes are initialized with a color and integer, player one of two
   # colors are ruby2d keywords
@@ -38,10 +38,6 @@ class Snake
     crash?
   end
 
-  def color
-    @snake_color
-  end
-
   def color_name
     return @snake_color.capitalize
   end
@@ -55,10 +51,13 @@ class Snake
     end
   end
 
-  def direction
-    @direction
+  def draw_regular(pos)
+    Square.new(x: pos[0] * Settings::GRID_SIZE, y: pos[1] * Settings::GRID_SIZE, size: Settings::NODE_SIZE, color: @snake_color, z: @z) # the regular snake
   end
 
+  def draw_glow(pos, opacity)
+    Square.new(x: pos[0] * Settings::GRID_SIZE, y: pos[1] * Settings::GRID_SIZE, size: Settings::NODE_SIZE, color: 'white' , opacity: opacity, z: @z + 1) # a lighting effect
+  end
   # ensures snake can only be turned once per clock tick
   def new_direction(dir)
     @direction = dir unless @turned
