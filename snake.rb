@@ -9,11 +9,12 @@ class Snake
   attr_reader :turned
   attr_reader :growing
   attr_reader :z
-  attr_reader :direction
+  attr_accessor :direction
+  attr_accessor :turned
 
   # snakes are initialized with a color and integer, player one of two
   # colors are ruby2d keywords
-  def initialize(player, color)
+  def initialize(player=PlayerIds::PLAYER_ONE, color="red")
     @playerButton = Button.new(player)
 
     xpos = Settings::GRID_WIDTH / 3
@@ -41,23 +42,17 @@ class Snake
   def color_name
     return @snake_color.capitalize
   end
-  # draws a snake with a gradient, illuminated effect
+  # draws a snake
   def draw
-    opacity = 0.4
-    @position.reverse.each do |pos|
-      opacity *= 0.8
-      Square.new(x: pos[0] * Settings::GRID_SIZE, y: pos[1] * Settings::GRID_SIZE, size: Settings::NODE_SIZE, color: @snake_color, z: @z) # the regular snake
-      Square.new(x: pos[0] * Settings::GRID_SIZE, y: pos[1] * Settings::GRID_SIZE, size: Settings::NODE_SIZE, color: 'white' , opacity: opacity, z: @z + 1) # a lighting effect
+    @position.each do |pos|
+      draw_base(pos)
     end
   end
 
-  def draw_regular(pos)
-    Square.new(x: pos[0] * Settings::GRID_SIZE, y: pos[1] * Settings::GRID_SIZE, size: Settings::NODE_SIZE, color: @snake_color, z: @z) # the regular snake
+  def draw_base(node)
+    Square.new(x: node[0] * Settings::GRID_SIZE, y: node[1] * Settings::GRID_SIZE, size: Settings::NODE_SIZE, color: @snake_color, z: @z)
   end
 
-  def draw_glow(pos, opacity)
-    Square.new(x: pos[0] * Settings::GRID_SIZE, y: pos[1] * Settings::GRID_SIZE, size: Settings::NODE_SIZE, color: 'white' , opacity: opacity, z: @z + 1) # a lighting effect
-  end
   # ensures snake can only be turned once per clock tick
   def new_direction(dir)
     @direction = dir unless @turned

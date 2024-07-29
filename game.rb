@@ -25,7 +25,7 @@ class Game
   end
 
   def get_player_one_color()
-    return Settings::PLAYER_TWO_COLORS.sample
+    return Settings::PLAYER_ONE_COLORS.sample
   end
 
   def get_player_two_color()
