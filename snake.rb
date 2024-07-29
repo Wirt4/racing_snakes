@@ -83,16 +83,30 @@ class Snake
   end
 
   def detect_key(keystroke)
-    case keystroke
-      when @playerButton.up
+    if keystroke==@playerButton.left
+      case @direction
+      when Directions::RIGHT
         set_allowable_direction(Directions::UP)
-      when @playerButton.left
+      when Directions::UP
         set_allowable_direction(Directions::LEFT)
-      when @playerButton.down
+      when Directions::LEFT
         set_allowable_direction(Directions::DOWN)
-      when @playerButton.right
+      when Directions::DOWN
         set_allowable_direction(Directions::RIGHT)
+      end
+    elsif keystroke == @playerButton.right
+      case @direction
+      when Directions::RIGHT
+        set_allowable_direction(Directions::DOWN)
+      when Directions::UP
+        set_allowable_direction(Directions::RIGHT)
+      when Directions::LEFT
+        set_allowable_direction(Directions::UP)
+      when Directions::DOWN
+        set_allowable_direction(Directions::LEFT)
+      end
     end
+
   end
 
   # moves snake along given direction once per clock tick
