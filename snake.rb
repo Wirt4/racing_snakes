@@ -7,7 +7,7 @@ class Snake
 
   attr_accessor :position
   attr_reader :turned
-  attr_reader :growing
+  attr_accessor :growing
   attr_reader :z
   attr_accessor :direction
   attr_accessor :turned
@@ -55,37 +55,64 @@ class Snake
 
   # ensures snake can only be turned once per clock tick
   def new_direction(dir)
-    @direction = dir unless @turned
+    if @turned
+      return
+    end
+
+    @direction = dir
     @turned = true
   end
 
-  def detect_key(keystroke)
+  def is_allowable_direction(dir)
+    case dir
+      when Directions::UP
+        return @direction != Directions::DOWN
+      when Directions::LEFT
+        return @direction != Directions::RIGHT
+      when Directions::DOWN
+        return @direction != Directions::UP
+      when Directions::RIGHT
+        return @direction != Directions::LEFT
+    end
+  end
 
-      new_direction('left') if keystroke == @playerButton.left && direction != 'right'
-      new_direction('right') if keystroke == @playerButton.right && direction != 'left'
-      new_direction('up') if keystroke == @playerButton.up && direction != 'down'
-      new_direction('down') if keystroke == @playerButton.down && direction != 'up'
+  def set_allowable_direction(dir)
+    if (is_allowable_direction(dir))
+      new_direction(dir)
+    end
+  end
+
+  def detect_key(keystroke)
+    case keystroke
+      when @playerButton.up
+        set_allowable_direction(Directions::UP)
+      when @playerButton.left
+        set_allowable_direction(Directions::LEFT)
+      when @playerButton.down
+        set_allowable_direction(Directions::DOWN)
+      when @playerButton.right
+        set_allowable_direction(Directions::RIGHT)
+    end
   end
 
   # moves snake along given direction once per clock tick
   def move
-    @position.shift unless @growing
-    case @direction
-    when 'down'
-      @position.push(new_coords(head[0], head[1] + 1))
-    when 'up'
-      @position.push(new_coords(head[0], head[1] - 1))
-    when 'left'
-      @position.push(new_coords(head[0] - 1, head[1]))
-    when 'right'
-      @position.push(new_coords(head[0] + 1, head[1]))
-    end
-    @growing = @turned = false
+     @position.shift unless @growing
+     case @direction
+     when Directions::DOWN
+       push_adjusted(head[0], head[1] + 1)
+     when Directions::UP
+       push_adjusted(head[0], head[1] - 1)
+     when Directions::LEFT
+       push_adjusted(head[0] - 1, head[1])
+     when Directions::RIGHT
+       push_adjusted(head[0] + 1, head[1])
+     end
+     @growing = @turned = false
   end
 
-  # creates the "infinite canvas" feel
-  def new_coords(x,y)
-    [x % Settings::GRID_WIDTH, y % Settings::GRID_HEIGHT]
+  def push_adjusted(x, y)
+    @position.push([x % Settings::GRID_WIDTH, y % Settings::GRID_HEIGHT])
   end
 
   # returns all slots occupied by the snake minus the head

@@ -174,4 +174,237 @@ RSpec.describe Snake do
       expect(snake.turned).to eq (true)
     end
   end
+  describe 'detect_key' do
+    describe 'player one' do
+      it 'up' do
+        snake = Snake.new(PlayerIds::PLAYER_ONE)
+        allow(snake).to receive(:new_direction)
+        snake.direction = 'left'
+
+        snake.detect_key('up')
+
+        expect(snake).to have_received(:new_direction).with('up')
+      end
+      it 'up against down' do
+        snake = Snake.new(PlayerIds::PLAYER_ONE)
+        allow(snake).to receive(:new_direction)
+        snake.direction = Directions::DOWN
+
+        snake.detect_key('up')
+
+        expect(snake).not_to have_received(:new_direction).with(Directions::UP)
+      end
+      it 'right' do
+        snake = Snake.new(PlayerIds::PLAYER_ONE)
+        allow(snake).to receive(:new_direction)
+        snake.direction = Directions::DOWN
+
+        snake.detect_key(Directions::RIGHT)
+        expect(snake).to have_received(:new_direction).with(Directions::RIGHT)
+      end
+      it 'right against left' do
+        snake = Snake.new(PlayerIds::PLAYER_ONE)
+        allow(snake).to receive(:new_direction)
+        snake.direction = Directions::LEFT
+
+        snake.detect_key('right')
+        expect(snake).not_to have_received(:new_direction).with(Directions::RIGHT)
+      end
+      it 'left against right' do
+        snake = Snake.new(PlayerIds::PLAYER_ONE)
+        allow(snake).to receive(:new_direction)
+        snake.direction = Directions::RIGHT
+
+        snake.detect_key('left')
+        expect(snake).not_to have_received(:new_direction).with(Directions::LEFT)
+      end
+      it 'down' do
+        snake = Snake.new(PlayerIds::PLAYER_ONE)
+        allow(snake).to receive(:new_direction)
+        snake.direction = Directions::RIGHT
+
+        snake.detect_key('down')
+        expect(snake).to have_received(:new_direction).with(Directions::DOWN)
+      end
+      it 'down against up' do
+        snake = Snake.new(PlayerIds::PLAYER_ONE)
+        allow(snake).to receive(:new_direction)
+        snake.direction = Directions::UP
+        snake.detect_key('down')
+        expect(snake).not_to have_received(:new_direction).with(Directions::DOWN)
+      end
+    end
+    describe 'player two' do
+      it 'w' do
+        snake = Snake.new(PlayerIds::PLAYER_TWO)
+        allow(snake).to receive(:new_direction)
+        snake.direction = 'left'
+
+        snake.detect_key('w')
+
+        expect(snake).to have_received(:new_direction).with(Directions::UP)
+      end
+      it 'up against down' do
+        snake = Snake.new(PlayerIds::PLAYER_TWO)
+        allow(snake).to receive(:new_direction)
+        snake.direction = Directions::DOWN
+
+        snake.detect_key('w')
+
+        expect(snake).not_to have_received(:new_direction).with(Directions::UP)
+      end
+      it 'd' do
+        snake = Snake.new(PlayerIds::PLAYER_TWO)
+        allow(snake).to receive(:new_direction)
+        snake.direction = Directions::DOWN
+
+        snake.detect_key('d')
+        expect(snake).to have_received(:new_direction).with(Directions::RIGHT)
+      end
+      it 'right against left' do
+        snake = Snake.new(PlayerIds::PLAYER_TWO)
+        allow(snake).to receive(:new_direction)
+        snake.direction = Directions::LEFT
+
+        snake.detect_key('d')
+        expect(snake).not_to have_received(:new_direction).with(Directions::RIGHT)
+      end
+      it 'left against right' do
+        snake = Snake.new(PlayerIds::PLAYER_TWO)
+        allow(snake).to receive(:new_direction)
+        snake.direction = Directions::RIGHT
+
+        snake.detect_key('a')
+        expect(snake).not_to have_received(:new_direction).with(Directions::LEFT)
+      end
+      it 'down' do
+        snake = Snake.new(PlayerIds::PLAYER_TWO)
+        allow(snake).to receive(:new_direction)
+        snake.direction = Directions::RIGHT
+
+        snake.detect_key('s')
+        expect(snake).to have_received(:new_direction).with(Directions::DOWN)
+      end
+      it 'down against up' do
+        snake = Snake.new(PlayerIds::PLAYER_TWO)
+        allow(snake).to receive(:new_direction)
+        snake.direction = Directions::UP
+        snake.detect_key('s')
+        expect(snake).not_to have_received(:new_direction).with(Directions::DOWN)
+      end
+    end
+  end
+  describe('move tests')do
+    it 'snake is not growing, expect shift to be called on position' do
+      snake = Snake.new()
+      allow(snake.position).to receive(:shift)
+      snake.growing = false
+      snake.move
+      expect(snake.position).to have_received(:shift)
+    end
+    it 'snake is  growing, expect shift ot to be called on position' do
+      snake = Snake.new()
+      allow(snake.position).to receive(:shift)
+      snake.growing = true
+      snake.move
+      expect(snake.position).not_to have_received(:shift)
+    end
+    it 'snake is moving up and' do
+      snake = Snake.new()
+      allow(snake).to receive(:push_adjusted)
+      snake.growing = false
+      snake.move
+      expect(snake).to have_received(:push_adjusted)
+    end
+    it 'snake is moving up and growing' do
+      snake = Snake.new()
+      allow(snake).to receive(:push_adjusted)
+      snake.growing = true
+      snake.move
+      expect(snake).to have_received(:push_adjusted)
+    end
+    it 'snake is moving up with arguments' do
+      snake = Snake.new()
+      allow(snake).to receive(:push_adjusted)
+      snake.direction = Directions::UP
+
+      snake.move
+      expect(snake).to have_received(:push_adjusted).with(snake.head[0], snake.head[1] - 1)
+    end
+    it 'snake is moving right with arguments' do
+      snake = Snake.new()
+      allow(snake).to receive(:push_adjusted)
+      snake.direction = Directions::RIGHT
+      snake.move
+      expect(snake).to have_received(:push_adjusted).with(snake.head[0] + 1, snake.head[1])
+    end
+    it 'snake is moving down with arguments' do
+      snake = Snake.new()
+      allow(snake).to receive(:push_adjusted)
+      snake.direction = Directions::DOWN
+      snake.move
+      expect(snake).to have_received(:push_adjusted).with(snake.head[0], snake.head[1] + 1)
+    end
+    it 'snake is moving left with arguments' do
+      snake = Snake.new()
+      allow(snake).to receive(:push_adjusted)
+      snake.direction = Directions::LEFT
+      snake.move
+      expect(snake).to have_received(:push_adjusted).with(snake.head[0]-1, snake.head[1])
+    end
+    it 'growing is false' do
+      snake = Snake.new()
+      snake.move
+      expect(snake.growing).to eq(false)
+    end
+    it 'turned is false' do
+      snake = Snake.new()
+      snake.move
+      expect(snake.turned).to eq(false)
+    end
+  end
+  describe 'push_adjusted tests'do
+    it 'expect legal coordinates to be pushed to position' do
+      snake = Snake.new()
+      allow(snake.position).to receive(:push)
+      snake.push_adjusted(0,0)
+      expect(snake.position).to have_received(:push).with ([0,0])
+    end
+    it 'expect other legal coordinates to be pushed to position' do
+      snake = Snake.new()
+      allow(snake.position).to receive(:push)
+      snake.push_adjusted(4,5)
+      expect(snake.position).to have_received(:push).with ([4,5])
+    end
+    it 'expect other legal coordinates to be pushed to position' do
+      snake = Snake.new()
+      allow(snake.position).to receive(:push)
+      snake.push_adjusted(4,5)
+      expect(snake.position).to have_received(:push).with ([4,5])
+    end
+    it 'expect lateral wraparound positive' do
+      snake = Snake.new()
+      allow(snake.position).to receive(:push)
+      snake.push_adjusted(Settings::GRID_WIDTH,5)
+      expect(snake.position).to have_received(:push).with ([0,5])
+    end
+    it 'expect lateral wraparound negative' do
+      snake = Snake.new()
+      allow(snake.position).to receive(:push)
+      snake.push_adjusted(-1,5)
+      expect(snake.position).to have_received(:push).with([Settings::GRID_WIDTH - 1, 5])
+    end
+    it 'expect vertical wraparound positive' do
+      snake = Snake.new()
+      allow(snake.position).to receive(:push)
+      snake.push_adjusted(0,Settings::GRID_HEIGHT)
+      expect(snake.position).to have_received(:push).with ([0,0])
+    end
+    it 'expect vertical wraparound negative' do
+      snake = Snake.new()
+      allow(snake.position).to receive(:push)
+      snake.push_adjusted(0,-1)
+      expect(snake.position).to have_received(:push).with ([0,Settings::GRID_HEIGHT - 1])
+    end
+  end
 end
