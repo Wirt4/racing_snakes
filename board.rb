@@ -52,8 +52,8 @@ class Board
 
       drop_shadow('(press space)',  Settings::TEXT_COLOR, 350, 425, 30, 2)
     end
-    drop_shadow(Constants::PROMPT + ' ' + Constants::PLAYER_ONE_KEYS,  @p1color, 10, Settings::GRID_HEIGHT-Settings::GRID_SIZE, 30,2)
-    drop_shadow(Constants::PROMPT + ' '+ Constants::PLAYER_TWO_KEYS, @p2color, 1920 - 250, Settings::GRID_HEIGHT-Settings::GRID_SIZE, 30,2)
+    drop_shadow(Constants::PROMPT + ' '+ Constants::PLAYER_ONE_KEYS, @p1color, 1920 - 250, Settings::GRID_HEIGHT-Settings::GRID_SIZE, 30,2)
+    drop_shadow(Constants::PROMPT + ' ' + Constants::PLAYER_TWO_KEYS,  @p2color, 10, Settings::GRID_HEIGHT-Settings::GRID_SIZE, 30,2)
   end
 
 # returns a string of who wins

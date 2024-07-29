@@ -1,99 +1,123 @@
 load 'button.rb'
 load 'settings.rb'
+load 'directions.rb'
 
 class Snake
 # using color keywords so can id players in feedback.
 
-  attr_writer :new_direction
-  attr_writer :position
+  attr_accessor :position
+  attr_reader :turned
+  attr_accessor :growing
+  attr_reader :z
+  attr_accessor :direction
+  attr_accessor :turned
 
   # snakes are initialized with a color and integer, player one of two
   # colors are ruby2d keywords
-  def initialize(player, color)
+  def initialize(player=PlayerIds::PLAYER_ONE, color="red")
     @playerButton = Button.new(player)
-    xpos = if player == 1
-             Settings::GRID_WIDTH * 2 / 3
-           else
-             Settings::GRID_WIDTH / 3
-           end
+
+    xpos = Settings::GRID_WIDTH / 3
+
+    if player== PlayerIds::PLAYER_ONE
+      xpos *= 2
+    end
 
     @snake_color = color
+    @position = []
+    (3..5).each do |n|
+      position.push([xpos, Settings::GRID_HEIGHT - n])
+    end
 
-    @position = [[xpos, Settings::GRID_HEIGHT - 3], [xpos, Settings::GRID_HEIGHT - 4], [xpos, Settings::GRID_HEIGHT - 5]]
-    @direction = 'up'
+    @direction = Directions::UP
     @growing = @turned = false
     @z = 0
   end
   # determines if the snake hit the wall of the other snake
   def hit_wall?(other_player)
-    @position.pop
-    @position += [other_player.head]
+    @position = body + [other_player.head]
     crash?
   end
 
-  def color
-    @snake_color
-  end
-
   def color_name
-    @snake_color.capitalize
+    return @snake_color.capitalize
   end
-  # draws a snake with a gradient, illuminated effect
+  # draws a snake
   def draw
-    opacity = 0.4
-    @position.reverse.each do |pos|
-      opacity *= 0.8
-      Square.new(x: pos[0] * Settings::GRID_SIZE, y: pos[1] * Settings::GRID_SIZE, size: Settings::NODE_SIZE, color: @snake_color, z: @z) # the regular snake
-      Square.new(x: pos[0] * Settings::GRID_SIZE, y: pos[1] * Settings::GRID_SIZE, size: Settings::NODE_SIZE, color: 'white' , opacity: opacity, z: @z + 1) # a lighting effect
+    @position.each do |pos|
+      draw_base(pos)
     end
   end
 
-  def direction
-    @direction
+  def draw_base(node)
+    Square.new(x: node[0] * Settings::GRID_SIZE, y: node[1] * Settings::GRID_SIZE, size: Settings::NODE_SIZE, color: @snake_color, z: @z)
   end
 
   # ensures snake can only be turned once per clock tick
   def new_direction(dir)
-    @direction = dir unless @turned
+    if @turned
+      return
+    end
+
+    @direction = dir
     @turned = true
   end
 
-  def detect_key(keystroke)
+  def is_allowable_direction(dir)
+    case dir
+      when Directions::UP
+        return @direction != Directions::DOWN
+      when Directions::LEFT
+        return @direction != Directions::RIGHT
+      when Directions::DOWN
+        return @direction != Directions::UP
+      when Directions::RIGHT
+        return @direction != Directions::LEFT
+    end
+  end
 
-      new_direction('left') if keystroke == @playerButton.left && direction != 'right'
-      new_direction('right') if keystroke == @playerButton.right && direction != 'left'
-      new_direction('up') if keystroke == @playerButton.up && direction != 'down'
-      new_direction('down') if keystroke == @playerButton.down && direction != 'up'
+  def set_allowable_direction(dir)
+    if (is_allowable_direction(dir))
+      new_direction(dir)
+    end
+  end
+
+  def detect_key(keystroke)
+    case keystroke
+      when @playerButton.up
+        set_allowable_direction(Directions::UP)
+      when @playerButton.left
+        set_allowable_direction(Directions::LEFT)
+      when @playerButton.down
+        set_allowable_direction(Directions::DOWN)
+      when @playerButton.right
+        set_allowable_direction(Directions::RIGHT)
+    end
   end
 
   # moves snake along given direction once per clock tick
   def move
-    @position.shift unless @growing
-    case @direction
-    when 'down'
-      @position.push(new_coords(head[0], head[1] + 1))
-    when 'up'
-      @position.push(new_coords(head[0], head[1] - 1))
-    when 'left'
-      @position.push(new_coords(head[0] - 1, head[1]))
-    when 'right'
-      @position.push(new_coords(head[0] + 1, head[1]))
-    end
-    @growing = @turned = false
+     @position.shift unless @growing
+     case @direction
+     when Directions::DOWN
+       push_adjusted(head[0], head[1] + 1)
+     when Directions::UP
+       push_adjusted(head[0], head[1] - 1)
+     when Directions::LEFT
+       push_adjusted(head[0] - 1, head[1])
+     when Directions::RIGHT
+       push_adjusted(head[0] + 1, head[1])
+     end
+     @growing = @turned = false
   end
 
-  # creates the "infinite canvas" feel
-  def new_coords(x,y)
-    [x % Settings::GRID_WIDTH, y % Settings::GRID_HEIGHT]
+  def push_adjusted(x, y)
+    @position.push([x % Settings::GRID_WIDTH, y % Settings::GRID_HEIGHT])
   end
 
   # returns all slots occupied by the snake minus the head
   def body
     return @position.pop()
-  end
-
-  def position
-    @position
   end
 
   def head
