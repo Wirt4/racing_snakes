@@ -12,8 +12,8 @@ class Board
     @paused = true
     @tie = false
     @p1_winner = false
-    @p1color = snake1.color
-    @p2color = snake2.color
+    @p1color = snake1.color_name
+    @p2color = snake2.color_name
   end
 
 

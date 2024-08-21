@@ -32,7 +32,6 @@ RSpec.describe Game do
       Game.new()
       expect(Board).to have_received(:new)
     end
-
   end
 
   describe '#draw_snakes' do
@@ -428,8 +427,6 @@ RSpec.describe Game do
       k = Keyboard::SPACE
       allow(game.board).to receive(:finished?).and_return(true)
       allow(game).to receive(:pause)
-
-
       allow(Board).to receive(:new)
       game.detect_key(k)
 

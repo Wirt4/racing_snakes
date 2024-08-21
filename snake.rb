@@ -14,16 +14,18 @@ class Snake
 
   # snakes are initialized with a color and integer, player one of two
   # colors are ruby2d keywords
-  def initialize(player=PlayerIds::PLAYER_ONE, color="red")
+  def initialize(player=PlayerIds::PLAYER_ONE)
     @playerButton = Button.new(player)
 
     xpos = Settings::GRID_WIDTH / 3
 
     if player== PlayerIds::PLAYER_ONE
       xpos *= 2
+      @snake_color = Settings::PLAYER_ONE_COLORS.sample
+    else
+      @snake_color = Settings::PLAYER_TWO_COLORS.sample
     end
 
-    @snake_color = color
     @position = []
     (3..5).each do |n|
       position.push([xpos, Settings::GRID_HEIGHT - n])
