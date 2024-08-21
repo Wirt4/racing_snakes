@@ -429,15 +429,8 @@ RSpec.describe Game do
       allow(game.board).to receive(:finished?).and_return(true)
       allow(game).to receive(:pause)
 
-      snake_args = []
-
-      allow(Snake).to receive(:new) do | *args|
-        snake_args << args
-        double(Snake)
-      end
 
       allow(Board).to receive(:new)
-
       game.detect_key(k)
 
       expect(Board).to have_received(:new)
