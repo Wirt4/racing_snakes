@@ -16,8 +16,9 @@ RSpec.describe Snake do
       expect(Button).to have_received(:new).with(PlayerIds::PLAYER_TWO)
     end
     it 'passing a color to the snake sets it'do
-      snake = Snake.new(PlayerIds::PLAYER_TWO, "red")
-      expect(snake.color_name).to eq('Red')
+      allow(Settings::PLAYER_TWO_COLORS).to receive(:sample).and_return('blue')
+      snake = Snake.new(PlayerIds::PLAYER_TWO)
+      expect(snake.color_name).to eq('Blue')
     end
     it 'passing a color to the snake sets it'do
       snake = Snake.new(PlayerIds::PLAYER_TWO, "blue")
