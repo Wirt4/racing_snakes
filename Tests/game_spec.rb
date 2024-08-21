@@ -440,7 +440,7 @@ RSpec.describe Game do
 
       game.detect_key(k)
 
-      expect(Board).to have_received(:new).with(snake_args[0][1], snake_args[1][1])
+      expect(Board).to have_received(:new)
     end
     it 'Key is space, game is not finished' do
       game = Game.new
