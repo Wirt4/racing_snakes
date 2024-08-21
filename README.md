@@ -22,7 +22,7 @@
 <p>Run the followoing to start the app</p>
 <code>ruby racing_snakes.rb</cold>
 <h2>The rules</h2>
-<p>A game for two players: Move your snake with either W, S, A, D keys or the arrow keys. Eat the snake food to grow. The first snake to crash loses. Two snakes colliding directly head-on counts as a tie. Press space to pause and esc to close.</p>
+<p>A game for two players: Move your snake with either W, D keys or O,P keys. The left key turns  your snake had anticlockwise. Right turns your snake head clockwise. Eat the snake food to grow. The first snake to crash loses. Two snakes colliding directly head-on counts as a tie. Press space to pause and esc to close.</p>
 <h1>Changes Made</h1>
 <p>Mario Visic's <a href ="https://www.youtube.com/watch?v=2UVhYHBT_1o">tutorial</a> was very helpful in creating snake and game classes, and managing the snake objects growth, movement and collision detection via an array of tile coordinates. I've made the following changes from Mario's tutorial:
   <ul>

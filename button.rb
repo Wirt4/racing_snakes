@@ -1,24 +1,12 @@
 class Button
   def initialize(player_id)
-    if player_id==1
-        @left ='left'
-        @right = 'right'
-        @down ='down'
-        @up = 'up'
+    if player_id==PlayerIds::PLAYER_ONE
+        @left ='o'
+        @right = 'p'
       return
     end
-    @left ='a'
-    @right = 'd'
-    @down ='s'
-    @up = 'w'
-  end
-
-  def up
-    @up
-  end
-
-  def down
-    @down
+    @left ='q'
+    @right = 'w'
   end
 
   def left

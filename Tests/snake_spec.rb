@@ -175,122 +175,128 @@ RSpec.describe Snake do
     end
   end
   describe 'detect_key' do
-    describe 'player one' do
-      it 'up' do
-        snake = Snake.new(PlayerIds::PLAYER_ONE)
-        allow(snake).to receive(:new_direction)
-        snake.direction = 'left'
-
-        snake.detect_key('up')
-
-        expect(snake).to have_received(:new_direction).with('up')
+    describe 'player one'do
+      describe 'anticlockwise'do
+        it 'sweep against direction right' do
+          snake = Snake.new()
+          snake.direction = Directions::RIGHT
+          allow(snake).to receive(:set_allowable_direction)
+          snake.detect_key('o')
+          expect(snake).to have_received(:set_allowable_direction).with (Directions::UP)
+        end
+        it 'sweep against direction up' do
+          snake = Snake.new()
+          snake.direction = Directions::UP
+          allow(snake).to receive(:set_allowable_direction)
+          snake.detect_key('o')
+          expect(snake).to have_received(:set_allowable_direction).with (Directions::LEFT)
+        end
+        it 'sweep against direction left' do
+          snake = Snake.new()
+          snake.direction = Directions::LEFT
+          allow(snake).to receive(:set_allowable_direction)
+          snake.detect_key('o')
+          expect(snake).to have_received(:set_allowable_direction).with (Directions::DOWN)
+        end
+        it 'sweep against direction left' do
+          snake = Snake.new()
+          snake.direction = Directions::DOWN
+          allow(snake).to receive(:set_allowable_direction)
+          snake.detect_key('o')
+          expect(snake).to have_received(:set_allowable_direction).with (Directions::RIGHT)
+        end
       end
-      it 'up against down' do
-        snake = Snake.new(PlayerIds::PLAYER_ONE)
-        allow(snake).to receive(:new_direction)
-        snake.direction = Directions::DOWN
-
-        snake.detect_key('up')
-
-        expect(snake).not_to have_received(:new_direction).with(Directions::UP)
-      end
-      it 'right' do
-        snake = Snake.new(PlayerIds::PLAYER_ONE)
-        allow(snake).to receive(:new_direction)
-        snake.direction = Directions::DOWN
-
-        snake.detect_key(Directions::RIGHT)
-        expect(snake).to have_received(:new_direction).with(Directions::RIGHT)
-      end
-      it 'right against left' do
-        snake = Snake.new(PlayerIds::PLAYER_ONE)
-        allow(snake).to receive(:new_direction)
-        snake.direction = Directions::LEFT
-
-        snake.detect_key('right')
-        expect(snake).not_to have_received(:new_direction).with(Directions::RIGHT)
-      end
-      it 'left against right' do
-        snake = Snake.new(PlayerIds::PLAYER_ONE)
-        allow(snake).to receive(:new_direction)
+      describe'clockwise'do
+      it 'sweep against direction right' do
+        snake = Snake.new()
         snake.direction = Directions::RIGHT
-
-        snake.detect_key('left')
-        expect(snake).not_to have_received(:new_direction).with(Directions::LEFT)
+        allow(snake).to receive(:set_allowable_direction)
+        snake.detect_key('p')
+        expect(snake).to have_received(:set_allowable_direction).with (Directions::DOWN)
       end
-      it 'down' do
-        snake = Snake.new(PlayerIds::PLAYER_ONE)
-        allow(snake).to receive(:new_direction)
-        snake.direction = Directions::RIGHT
-
-        snake.detect_key('down')
-        expect(snake).to have_received(:new_direction).with(Directions::DOWN)
-      end
-      it 'down against up' do
-        snake = Snake.new(PlayerIds::PLAYER_ONE)
-        allow(snake).to receive(:new_direction)
+      it 'sweep against direction up' do
+        snake = Snake.new()
         snake.direction = Directions::UP
-        snake.detect_key('down')
-        expect(snake).not_to have_received(:new_direction).with(Directions::DOWN)
+        allow(snake).to receive(:set_allowable_direction)
+        snake.detect_key('p')
+        expect(snake).to have_received(:set_allowable_direction).with (Directions::RIGHT)
+      end
+      it 'sweep against direction left' do
+        snake = Snake.new()
+        snake.direction = Directions::LEFT
+        allow(snake).to receive(:set_allowable_direction)
+        snake.detect_key('p')
+        expect(snake).to have_received(:set_allowable_direction).with (Directions::UP)
+      end
+      it 'sweep against direction down' do
+        snake = Snake.new()
+        snake.direction = Directions::LEFT
+        allow(snake).to receive(:set_allowable_direction)
+        snake.detect_key('p')
+        expect(snake).to have_received(:set_allowable_direction).with (Directions::UP)
+      end
       end
     end
-    describe 'player two' do
-      it 'w' do
-        snake = Snake.new(PlayerIds::PLAYER_TWO)
-        allow(snake).to receive(:new_direction)
-        snake.direction = 'left'
-
-        snake.detect_key('w')
-
-        expect(snake).to have_received(:new_direction).with(Directions::UP)
+    describe 'player two'do
+      describe 'anticlockwise'do
+        it 'sweep against direction right' do
+          snake = Snake.new(PlayerIds::PLAYER_TWO)
+          snake.direction = Directions::RIGHT
+          allow(snake).to receive(:set_allowable_direction)
+          snake.detect_key('q')
+          expect(snake).to have_received(:set_allowable_direction).with (Directions::UP)
+        end
+        it 'sweep against direction up' do
+          snake = Snake.new(PlayerIds::PLAYER_TWO)
+          snake.direction = Directions::UP
+          allow(snake).to receive(:set_allowable_direction)
+          snake.detect_key('q')
+          expect(snake).to have_received(:set_allowable_direction).with (Directions::LEFT)
+        end
+        it 'sweep against direction left' do
+          snake = Snake.new(PlayerIds::PLAYER_TWO)
+          snake.direction = Directions::LEFT
+          allow(snake).to receive(:set_allowable_direction)
+          snake.detect_key('q')
+          expect(snake).to have_received(:set_allowable_direction).with (Directions::DOWN)
+        end
+        it 'sweep against direction left' do
+          snake = Snake.new(PlayerIds::PLAYER_TWO)
+          snake.direction = Directions::DOWN
+          allow(snake).to receive(:set_allowable_direction)
+          snake.detect_key('q')
+          expect(snake).to have_received(:set_allowable_direction).with (Directions::RIGHT)
+        end
       end
-      it 'up against down' do
+      describe'clockwise'do
+      it 'sweep against direction right' do
         snake = Snake.new(PlayerIds::PLAYER_TWO)
-        allow(snake).to receive(:new_direction)
-        snake.direction = Directions::DOWN
-
-        snake.detect_key('w')
-
-        expect(snake).not_to have_received(:new_direction).with(Directions::UP)
-      end
-      it 'd' do
-        snake = Snake.new(PlayerIds::PLAYER_TWO)
-        allow(snake).to receive(:new_direction)
-        snake.direction = Directions::DOWN
-
-        snake.detect_key('d')
-        expect(snake).to have_received(:new_direction).with(Directions::RIGHT)
-      end
-      it 'right against left' do
-        snake = Snake.new(PlayerIds::PLAYER_TWO)
-        allow(snake).to receive(:new_direction)
-        snake.direction = Directions::LEFT
-
-        snake.detect_key('d')
-        expect(snake).not_to have_received(:new_direction).with(Directions::RIGHT)
-      end
-      it 'left against right' do
-        snake = Snake.new(PlayerIds::PLAYER_TWO)
-        allow(snake).to receive(:new_direction)
         snake.direction = Directions::RIGHT
-
-        snake.detect_key('a')
-        expect(snake).not_to have_received(:new_direction).with(Directions::LEFT)
+        allow(snake).to receive(:set_allowable_direction)
+        snake.detect_key('w')
+        expect(snake).to have_received(:set_allowable_direction).with (Directions::DOWN)
       end
-      it 'down' do
+      it 'sweep against direction up' do
         snake = Snake.new(PlayerIds::PLAYER_TWO)
-        allow(snake).to receive(:new_direction)
-        snake.direction = Directions::RIGHT
-
-        snake.detect_key('s')
-        expect(snake).to have_received(:new_direction).with(Directions::DOWN)
-      end
-      it 'down against up' do
-        snake = Snake.new(PlayerIds::PLAYER_TWO)
-        allow(snake).to receive(:new_direction)
         snake.direction = Directions::UP
-        snake.detect_key('s')
-        expect(snake).not_to have_received(:new_direction).with(Directions::DOWN)
+        allow(snake).to receive(:set_allowable_direction)
+        snake.detect_key('w')
+        expect(snake).to have_received(:set_allowable_direction).with (Directions::RIGHT)
+      end
+      it 'sweep against direction left' do
+        snake = Snake.new(PlayerIds::PLAYER_TWO)
+        snake.direction = Directions::LEFT
+        allow(snake).to receive(:set_allowable_direction)
+        snake.detect_key('w')
+        expect(snake).to have_received(:set_allowable_direction).with (Directions::UP)
+      end
+      it 'sweep against direction down' do
+        snake = Snake.new(PlayerIds::PLAYER_TWO)
+        snake.direction = Directions::LEFT
+        allow(snake).to receive(:set_allowable_direction)
+        snake.detect_key('w')
+        expect(snake).to have_received(:set_allowable_direction).with (Directions::UP)
+      end
       end
     end
   end
