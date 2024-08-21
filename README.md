@@ -33,3 +33,5 @@
     <li>Randomized colors for snakes and graphical embellishments</li>
     <li>a pause button (space bar)</li>
 </ul>
+<h1>To Test</h1>
+<p>`rspec Tests/*`</p>
