@@ -17,25 +17,36 @@ class Snake
   # colors are ruby2d keywords
   def initialize(player=PlayerIds::PLAYER_ONE)
     @playerButton = Button.new(player)
-
-    xpos = Settings::GRID_WIDTH / 3
-
-    if player== PlayerIds::PLAYER_ONE
-      xpos *= 2
-      @color = Settings::PLAYER_ONE_COLORS.sample
-    else
-      @color = Settings::PLAYER_TWO_COLORS.sample
-    end
-
-    @position = []
-    (3..5).each do |n|
-      position.push([xpos, Settings::GRID_HEIGHT - n])
-    end
-
+    set_staring_position(player)
+    @z = 0
+    @color = select_color(player)
     @direction = Directions::UP
     @growing = @turned = false
-    @z = 0
   end
+
+  def set_staring_position(player_id)
+    xpos = get_x_pos(player_id)
+    end_range = Settings::START_Y_TAIL + Settings::START_LENGTH - 1
+    @position = []
+    (Settings::START_Y_TAIL..end_range).each do |n|
+      position.push([xpos, Settings::GRID_HEIGHT - n])
+    end
+  end
+
+  def get_x_pos(player_id)
+    if player_id == PlayerIds::PLAYER_ONE
+      return 2 * Settings::GRID_WIDTH / 3
+    end
+    return Settings::GRID_WIDTH / 3
+  end
+
+  def select_color(player_id)
+    if player_id == PlayerIds::PLAYER_ONE
+      return Settings::PLAYER_ONE_COLORS.sample
+    end
+    return Settings::PLAYER_TWO_COLORS.sample
+  end
+
   # determines if the snake hit the wall of the other snake
   def hit_wall?(other_player)
     @position = body + [other_player.head]

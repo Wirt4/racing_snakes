@@ -7,7 +7,7 @@ class Board
     @food_x = Settings::GRID_WIDTH / 2
     @food_y = Settings::GRID_HEIGHT / 3
     @finished = false
-    @food_color = 'white'
+    @food_color = Settings::FOOD_COLOR
     @paused = true
     @tie = false
     @p1_winner = false
@@ -23,18 +23,18 @@ class Board
 # a cheesy effect, but helps make all the text readable
 # #todo: implement a coords class
   def drop_shadow(txt, txt_color, x_cord, y_cord, txt_size=72, offset=2)
-    Text.new(txt, color: 'black', x: x_cord + offset, y: y_cord + offset, size: txt_size)
+    Text.new(txt, color: Settings::BACKGROUND, x: x_cord + offset, y: y_cord + offset, size: txt_size)
     Text.new(txt, color: txt_color, x: x_cord , y: y_cord, size: txt_size)
   end
 
 # need to detect one space ahead in the case of a head - on collision
   def is_tie(p1, p2)
     if p1.head[0]==p2.head[0]
-      @tie = tie_lemma?(1, p1, p2,'up', 'down')
+      @tie = tie_lemma?(1, p1, p2,Directions::UP, Directions::DOWN)
       return
     end
     if p1.head[1] == p2.head[1]
-      @tie = tie_lemma?(0, p1, p2, 'left', 'right')
+      @tie = tie_lemma?(0, p1, p2, Directions::LEFT, Directions::RIGHT)
       return
     end
     @tie = false
@@ -49,7 +49,7 @@ class Board
     if menu?
       drop_shadow(Constants::GAME_TITLE, Settings::TEXT_COLOR, 70, 350, 72, 2)
 
-      drop_shadow('(press space)',  Settings::TEXT_COLOR, 350, 425, 30, 2)
+      drop_shadow(Settings::PRESS_SPACE,  Settings::TEXT_COLOR, 350, 425, 30, 2)
     end
     drop_shadow(Constants::PROMPT + ' '+ Constants::PLAYER_ONE_KEYS, @p1color, 1920 - 250, Settings::GRID_HEIGHT-Settings::GRID_SIZE, 30,2)
     drop_shadow(Constants::PROMPT + ' ' + Constants::PLAYER_TWO_KEYS,  @p2color, 10, Settings::GRID_HEIGHT-Settings::GRID_SIZE, 30,2)
@@ -58,14 +58,14 @@ class Board
 # returns a string of who wins
   def winner(p1, p2)
     if @tie
-      return 'Tie'
+      return Settings::TIE_MESSAGE
     end
     winner = if p1.crash?  || p2.hit_wall?(p1)
                p2
              else
                p1
              end
-    winner.color_name.concat(' Wins')
+    winner.color_name.concat(Settings::WINNER_MESSAGE)
   end
 
 # detects a collision, either snake hit snake or snake hits self
