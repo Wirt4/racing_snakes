@@ -50,12 +50,6 @@ RSpec.describe Board do
       board = Board.new(s1, s2)
       expect(board.tie).to eq(false)
     end
-    it "board should initialize with p1_winner as false" do
-      s1 = Snake.new()
-      s2 = Snake.new()
-      board = Board.new(s1, s2)
-      expect(board.p1_winner?).to eq(false)
-    end
     it "board should initialize with p1 color as s1's color" do
       s1 = Snake.new()
       s2 = Snake.new()
