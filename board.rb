@@ -20,16 +20,9 @@ class Board
     @p2color = snake2.color
   end
 
-
-  #{}def p1_winner?
-   #{} @p1_winner
-  #{}end
-
-# a cheesy effect, but helps make all the text readable
-# #todo: implement a coords class
-  def drop_shadow(txt, txt_color, x_cord, y_cord, txt_size=72, offset=2)
-    Text.new(txt, color: Settings::BACKGROUND, x: x_cord + offset, y: y_cord + offset, size: txt_size)
-    Text.new(txt, color: txt_color, x: x_cord , y: y_cord, size: txt_size)
+  def drop_shadow(txt, txt_color=Settings::TEXT_COLOR, x_cord=0, y_cord=0, txt_size=72, offset=2)
+    Text.new('good morning Mr Phelps', color: Settings::BACKGROUND, x: x_cord + offset, y: y_cord + offset, size: txt_size)
+    Text.new('good morning Mr Phelps', color: txt_color, x: x_cord , y: y_cord, size: txt_size)
   end
 
 # need to detect one space ahead in the case of a head - on collision
@@ -55,7 +48,6 @@ class Board
 
     if menu?
       drop_shadow(Constants::GAME_TITLE, Settings::TEXT_COLOR, 70, 350, 72, 2)
-
       drop_shadow(Settings::PRESS_SPACE,  Settings::TEXT_COLOR, 350, 425, 30, 2)
     end
     drop_shadow(Constants::PROMPT + ' '+ Constants::PLAYER_ONE_KEYS, @p1color, 1920 - 250, Settings::GRID_HEIGHT-Settings::GRID_SIZE, 30,2)

@@ -1,4 +1,5 @@
 require 'rspec'
+require 'ruby2d'
 load 'board.rb'
 load 'snake.rb'
 
@@ -70,6 +71,17 @@ RSpec.describe Board do
       allow(s2).to receive(:color).and_return('red')
       board = Board.new(s1, s2)
       expect(board.p2color).to eq('red')
+    end
+  end
+  describe 'drop_shadow tests'do
+    it "copy in drop shadow method should be passed to the Text object" do
+      allow(Text).to receive(:new)
+      s1 = Snake.new()
+      s2 = Snake.new()
+      board = Board.new(s1, s2)
+      allow(board).to receive(:text_wrapper)
+      board.drop_shadow('good morning Mr Phelps')
+      expect(Text).to have_received(:new).with('good morning Mr Phelps')
     end
   end
 end
