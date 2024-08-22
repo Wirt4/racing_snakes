@@ -93,7 +93,7 @@ class Game
 
     if (board.finished? && k == Keyboard::SPACE)
       @player1 = Snake.new(PlayerIds::PLAYER_ONE)
-      @player2 = Snake.new(PlayerIds::PLAYER_ONE)
+      @player2 = Snake.new(PlayerIds::PLAYER_TWO)
       @board = Board.new(@player1, @player2)
     end
 
