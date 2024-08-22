@@ -2,9 +2,8 @@ load 'constants.rb'
 load 'settings.rb'
 class Board
 
-# initializes with the colors of the players so can print the instructions unobtrusively
 # colors are ruby2d keywords
-  def initialize(p1color, p2color)
+  def initialize(snake1, snake2)
     @food_x = Settings::GRID_WIDTH / 2
     @food_y = Settings::GRID_HEIGHT / 3
     @finished = false
@@ -12,8 +11,8 @@ class Board
     @paused = true
     @tie = false
     @p1_winner = false
-    @p1color = p1color
-    @p2color = p2color
+    @p1color = snake1.color
+    @p2color = snake2.color
   end
 
 

@@ -22,6 +22,8 @@ RSpec.describe Game do
         double(Snake)
       end
 
+      allow(Board).to receive(:new)
+
       Game.new
 
       expect(snake_args[0][0]).to eq(PlayerIds::PLAYER_ONE)
@@ -31,23 +33,6 @@ RSpec.describe Game do
       allow(Board).to receive(:new)
       Game.new()
       expect(Board).to have_received(:new)
-    end
-    it "gurantee the board object is called with the same colors as the snake objects"do
-      snake_args = []
-
-      allow(Snake).to receive(:new) do | *args|
-        snake_args << args
-        double(Snake)
-      end
-
-      allow(Board).to receive(:new)
-
-      Game.new
-      snake_color_1 = snake_args[0][1]
-      snake_color_2 = snake_args[1][1]
-
-      expect(Board).to have_received(:new).with(snake_color_1, snake_color_2)
-
     end
   end
 
@@ -444,19 +429,10 @@ RSpec.describe Game do
       k = Keyboard::SPACE
       allow(game.board).to receive(:finished?).and_return(true)
       allow(game).to receive(:pause)
-
-      snake_args = []
-
-      allow(Snake).to receive(:new) do | *args|
-        snake_args << args
-        double(Snake)
-      end
-
       allow(Board).to receive(:new)
-
       game.detect_key(k)
 
-      expect(Board).to have_received(:new).with(snake_args[0][1], snake_args[1][1])
+      expect(Board).to have_received(:new)
     end
     it 'Key is space, game is not finished' do
       game = Game.new

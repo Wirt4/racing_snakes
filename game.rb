@@ -12,11 +12,9 @@ class Game
 
   def initialize()
     @clock = GameClock.new()
-    color_1 = get_player_one_color()
-    color_2 = get_player_two_color()
-    @player1 = Snake.new(PlayerIds::PLAYER_ONE, color_1)
-    @player2 = Snake.new(PlayerIds::PLAYER_TWO, color_2)
-    @board = Board.new(color_1, color_2)
+    @player1 = Snake.new(PlayerIds::PLAYER_ONE)
+    @player2 = Snake.new(PlayerIds::PLAYER_TWO)
+    @board = Board.new(@player1, @player2)
   end
 
   def draw_snakes()
@@ -94,11 +92,9 @@ class Game
     @player2.detect_key(k)
 
     if (board.finished? && k == Keyboard::SPACE)
-      player1_color = Settings::PLAYER_ONE_COLORS.sample
-      player2_color = Settings::PLAYER_TWO_COLORS.sample
-      @player1 = Snake.new(1, player1_color)
-      @player2 = Snake.new(2, player2_color)
-      @board = Board.new(player1_color, player2_color)
+      @player1 = Snake.new(PlayerIds::PLAYER_ONE)
+      @player2 = Snake.new(PlayerIds::PLAYER_TWO)
+      @board = Board.new(@player1, @player2)
     end
 
     if (k == Keyboard::SPACE)
