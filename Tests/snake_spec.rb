@@ -63,6 +63,16 @@ RSpec.describe Snake do
       snake = Snake.new(PlayerIds::PLAYER_TWO)
       expect(snake.z).to eq(0)
     end
+    it 'test color getter'do
+      allow(Settings::PLAYER_TWO_COLORS).to receive(:sample).and_return('blue')
+      snake = Snake.new(PlayerIds::PLAYER_TWO)
+      expect(snake.color).to eq('blue')
+    end
+    it 'test color getter, yellow'do
+    allow(Settings::PLAYER_TWO_COLORS).to receive(:sample).and_return('yellow')
+    snake = Snake.new(PlayerIds::PLAYER_TWO)
+    expect(snake.color).to eq('yellow')
+  end
   end
   describe 'hit_wall?'do
     it 'make sure the body has been called' do
@@ -155,6 +165,7 @@ RSpec.describe Snake do
       expect(Square).to have_received(:new).with(x:Settings::GRID_SIZE, y: Settings::GRID_SIZE, size: Settings::NODE_SIZE, color: "yellow", z: 0)
     end
     it 'expect Square to be called with different arguments' do
+      allow(Settings::PLAYER_TWO_COLORS).to receive(:sample).and_return('green')
       snake = Snake.new(PlayerIds::PLAYER_TWO)
       allow(Square).to receive(:new)
       snake.draw_base([3,5])

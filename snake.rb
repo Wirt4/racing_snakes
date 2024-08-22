@@ -11,6 +11,7 @@ class Snake
   attr_reader :z
   attr_accessor :direction
   attr_accessor :turned
+  attr_reader :color
 
   # snakes are initialized with a color and integer, player one of two
   # colors are ruby2d keywords
@@ -21,9 +22,9 @@ class Snake
 
     if player== PlayerIds::PLAYER_ONE
       xpos *= 2
-      @snake_color = Settings::PLAYER_ONE_COLORS.sample
+      @color = Settings::PLAYER_ONE_COLORS.sample
     else
-      @snake_color = Settings::PLAYER_TWO_COLORS.sample
+      @color = Settings::PLAYER_TWO_COLORS.sample
     end
 
     @position = []
@@ -42,8 +43,9 @@ class Snake
   end
 
   def color_name
-    return @snake_color.capitalize
+    return @color.capitalize
   end
+
   # draws a snake
   def draw
     @position.each do |pos|
@@ -52,7 +54,7 @@ class Snake
   end
 
   def draw_base(node)
-    Square.new(x: node[0] * Settings::GRID_SIZE, y: node[1] * Settings::GRID_SIZE, size: Settings::NODE_SIZE, color: @snake_color, z: @z)
+    Square.new(x: node[0] * Settings::GRID_SIZE, y: node[1] * Settings::GRID_SIZE, size: Settings::NODE_SIZE, color: @color, z: @z)
   end
 
   # ensures snake can only be turned once per clock tick

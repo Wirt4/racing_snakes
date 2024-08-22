@@ -22,6 +22,8 @@ RSpec.describe Game do
         double(Snake)
       end
 
+      allow(Board).to receive(:new)
+
       Game.new
 
       expect(snake_args[0][0]).to eq(PlayerIds::PLAYER_ONE)

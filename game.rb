@@ -92,8 +92,6 @@ class Game
     @player2.detect_key(k)
 
     if (board.finished? && k == Keyboard::SPACE)
-      player1_color = Settings::PLAYER_ONE_COLORS.sample
-      player2_color = Settings::PLAYER_TWO_COLORS.sample
       @player1 = Snake.new(PlayerIds::PLAYER_ONE)
       @player2 = Snake.new(PlayerIds::PLAYER_ONE)
       @board = Board.new(@player1, @player2)
