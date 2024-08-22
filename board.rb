@@ -1,6 +1,11 @@
 load 'constants.rb'
 load 'settings.rb'
 class Board
+  attr_accessor :food_x
+  attr_accessor :food_y
+  attr_accessor :tie
+  attr_accessor :p1color
+  attr_accessor :p2color
 
 # colors are ruby2d keywords
   def initialize(snake1, snake2)
@@ -10,15 +15,15 @@ class Board
     @food_color = Settings::FOOD_COLOR
     @paused = true
     @tie = false
-    @p1_winner = false
+    #{}@p1_winner = false
     @p1color = snake1.color
     @p2color = snake2.color
   end
 
 
-  def p1_winner?
-    @p1_winner
-  end
+  #{}def p1_winner?
+   #{} @p1_winner
+  #{}end
 
 # a cheesy effect, but helps make all the text readable
 # #todo: implement a coords class
