@@ -28,15 +28,17 @@ class Board
   end
 
 # need to detect one space ahead in the case of a head - on collision
-  def is_tie(p1, p2)
-    if p1.head[0]==p2.head[0]
-      @tie = tie_lemma?(1, p1, p2,Directions::UP, Directions::DOWN)
+  def is_tie(snake1, snake2)
+    if snake1.head[0] == snake2.head[0] #TODO: make this a snake method so it's self-documenting
+      @tie = tie_lemma?(1, snake1, snake2,Directions::UP, Directions::DOWN)
       return
     end
-    if p1.head[1] == p2.head[1]
-      @tie = tie_lemma?(0, p1, p2, Directions::LEFT, Directions::RIGHT)
+
+    if snake1.head[1] == snake2.head[1]  #TODO: make this a snake method so it's self-documenting
+      @tie = tie_lemma?(0, snake1, snake2, Directions::LEFT, Directions::RIGHT)
       return
     end
+
     @tie = false
   end
 
@@ -107,12 +109,13 @@ class Board
 
   private
   def tie_lemma?(h_ndx, p1, p2, dir1, dir2)
-    if p1.head[h_ndx]-1 == p2.head[h_ndx]&& p1.direction == dir1 && p2.direction == dir2
+    if p1.head[h_ndx]-1 == p2.head[h_ndx] && p1.direction == dir1 && p2.direction == dir2
       return true
     end
-    if p1.head[h_ndx]+1 == p2.head[h_ndx] && p1.direction == dir2 && p2.direction== dir1
+
+    if p1.head[h_ndx]+1 == p2.head[h_ndx] && p1.direction == dir2 && p2.direction == dir1
       return true
     end
-    false
+    return false
   end
 end
