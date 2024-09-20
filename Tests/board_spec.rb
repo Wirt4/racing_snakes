@@ -79,9 +79,16 @@ RSpec.describe Board do
       s1 = Snake.new()
       s2 = Snake.new()
       board = Board.new(s1, s2)
-      allow(board).to receive(:text_wrapper)
       board.drop_shadow('good morning Mr Phelps')
-      expect(Text).to have_received(:new).with('good morning Mr Phelps')
+      expect(Text).to have_received(:new).with("good morning Mr Phelps", anything).twice()
+    end
+    it "copy in drop shadow method should be passed to the Text object - different data" do
+      allow(Text).to receive(:new)
+      s1 = Snake.new()
+      s2 = Snake.new()
+      board = Board.new(s1, s2)
+      board.drop_shadow('Look I made a hat')
+      expect(Text).to have_received(:new).with('Look I made a hat', anything).twice()
     end
   end
 end
