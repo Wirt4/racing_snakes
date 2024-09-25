@@ -102,7 +102,6 @@ RSpec.describe Game do
       expect(game.player1Eats).to eq(true)
       expect(game.player2Eats).to eq(false)
     end
-
     it 'Snake 2 ate the food'do
       game = Game.new
       allow(game).to receive(:draw_snakes)
@@ -354,6 +353,7 @@ RSpec.describe Game do
       expect(game.player2).not_to have_received(:set_z).with(Settings::WINNER_Z_NDX)
     end
   end
+
   describe '#detect_key'do
     it 'player1.detectKey called' do
       game = Game.new
@@ -368,7 +368,7 @@ RSpec.describe Game do
 
       expect(snake_args[0][0]).to eq(k)
     end
-    it 'player1.detectKey called,  arrow down' do
+    it 'player1.detectKey called, arrow down' do
       game = Game.new
       snake_args = []
       allow(game.player1).to receive(:detect_key) do |*args|
@@ -429,7 +429,7 @@ RSpec.describe Game do
       expect(Board).not_to have_received(:new)
       expect(Snake).not_to have_received(:new)
     end
-    it 'Key is left, game is  finished' do
+    it 'Key is left, game is finished' do
       game = Game.new
       k = Keyboard::LEFT
       allow(game.board).to receive(:finished?).and_return(true)

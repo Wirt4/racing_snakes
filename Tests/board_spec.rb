@@ -102,4 +102,26 @@ RSpec.describe Board do
       expect(Text).to have_received(:new).with(anything,{:color=>anything, :size=>anything, :x=>7, :y=>8})
     end
   end
+  describe 'draw tests' do
+    it 'check player two keys have been printed' do
+      s1 = Snake.new()
+      s2 = Snake.new()
+      board = Board.new(s1, s2)
+      allow(board).to receive(:drop_shadow)
+
+      board.draw
+
+      expect(board).to have_received(:drop_shadow).with("Turn: W, A, S, D", anything, anything, anything)
+    end
+    it 'check player two keys have been printed' do
+      s1 = Snake.new()
+      s2 = Snake.new()
+      board = Board.new(s1, s2)
+      allow(board).to receive(:drop_shadow)
+
+      board.draw
+
+      expect(board).to have_received(:drop_shadow).with("Turn: Arrow Keys", anything, anything, anything)
+    end
+  end
 end

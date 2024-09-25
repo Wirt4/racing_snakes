@@ -43,6 +43,33 @@ class Board
     @tie = false
   end
 
+  def display_menu_prompts
+    heading_coords = Coordinates.new(70, 350)
+    heading_size = 72
+    subheading_coords = Coordinates.new(350, 425)
+    subheading_size = 30
+
+    drop_shadow(Constants::GAME_TITLE, heading_coords,Settings::TEXT_COLOR, heading_size)
+    drop_shadow(Settings::PRESS_SPACE,  subheading_coords,Settings::TEXT_COLOR,  subheading_size)
+  end
+
+  def prompt(player)
+    if player == PlayerIds::PLAYER_ONE
+      keys = Constants::PLAYER_ONE_KEYS
+    else
+      keys = Constants::PLAYER_TWO_KEYS
+    end
+    return Constants::PROMPT + ' ' + keys
+  end
+
+  def display_player_keys
+    prompt_size = 30
+    p1_coords = Coordinates.new(1920 - 250,Settings::GRID_HEIGHT-Settings::GRID_SIZE)
+    p2_coords = Coordinates.new(10, Settings::GRID_HEIGHT-Settings::GRID_SIZE)
+    drop_shadow(prompt(PlayerIds::PLAYER_ONE), p1_coords,@p1color, prompt_size)
+    drop_shadow(prompt(PlayerIds::PLAYER_TWO), p2_coords, @p2color,prompt_size)
+  end
+
 # displays the instructions, menu screen and food
   def draw
     unless finished? || menu?
@@ -50,11 +77,10 @@ class Board
     end
 
     if menu?
-      drop_shadow(Constants::GAME_TITLE, Coordinates.new(70, 350),Settings::TEXT_COLOR, 72)
-      drop_shadow(Settings::PRESS_SPACE,  Coordinates.new(350, 425),Settings::TEXT_COLOR,  30)
+      display_menu_prompts()
     end
-    drop_shadow(Constants::PROMPT + ' '+ Constants::PLAYER_ONE_KEYS, Coordinates.new(1920 - 250,Settings::GRID_HEIGHT-Settings::GRID_SIZE),@p1color,30)
-    drop_shadow(Constants::PROMPT + ' ' + Constants::PLAYER_TWO_KEYS,   Coordinates.new(10, Settings::GRID_HEIGHT-Settings::GRID_SIZE), @p2color,30)
+
+    display_player_keys()
   end
 
 # returns a string of who wins
