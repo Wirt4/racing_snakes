@@ -331,17 +331,9 @@ RSpec.describe Game do
       allow(game.board).to receive(:winner).and_return('player 1')
       game.stop_game
 
-      expect(game.board).to have_received(:drop_shadow).with(game.board.winner,  Settings::TEXT_COLOR, Settings::WINNER_MSG_X, Settings::WINNER_MSG_Y)
+      expect(game.board).to have_received(:drop_shadow).with(game.board.winner, anything,  anything,)
     end
-    it 'player one is the winner, and player one Z is set with the Z index' do
-      game = Game.new
-      allow(game.player1).to receive(:set_z)
-      allow(game.board).to receive(:p1_winner?).and_return(true)
 
-      game.stop_game
-
-      expect(game.player1).to have_received(:set_z).with(Settings::WINNER_Z_NDX)
-    end
     it "player one is not the winner, and player one Z isn't set with the Z index" do
       game = Game.new
       allow(game.player1).to receive(:set_z)
@@ -350,16 +342,6 @@ RSpec.describe Game do
       game.stop_game
 
       expect(game.player1).not_to have_received(:set_z).with(Settings::WINNER_Z_NDX)
-    end
-
-    it "player one is not the winner, and player two Z isnset with the Z index" do
-      game = Game.new
-      allow(game.player2).to receive(:set_z)
-      allow(game.board).to receive(:p1_winner?).and_return(false)
-
-      game.stop_game
-
-      expect(game.player2).to have_received(:set_z).with(Settings::WINNER_Z_NDX)
     end
 
     it "player one is  the winner, and player two Z isn't set with the Z index" do

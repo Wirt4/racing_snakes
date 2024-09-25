@@ -1,6 +1,13 @@
 load 'constants.rb'
 load 'settings.rb'
+load 'coordinates.rb'
 class Board
+  attr_accessor :food_x
+  attr_accessor :food_y
+  attr_accessor :tie
+  attr_accessor :p1color
+  attr_accessor :p2color
+  attr_accessor :finished
 
 # colors are ruby2d keywords
   def initialize(snake1, snake2)
@@ -10,21 +17,15 @@ class Board
     @food_color = Settings::FOOD_COLOR
     @paused = true
     @tie = false
-    @p1_winner = false
+    #{}@p1_winner = false
     @p1color = snake1.color
     @p2color = snake2.color
   end
 
-
-  def p1_winner?
-    @p1_winner
-  end
-
-# a cheesy effect, but helps make all the text readable
-# #todo: implement a coords class
-  def drop_shadow(txt, txt_color, x_cord, y_cord, txt_size=72, offset=2)
-    Text.new(txt, color: Settings::BACKGROUND, x: x_cord + offset, y: y_cord + offset, size: txt_size)
-    Text.new(txt, color: txt_color, x: x_cord , y: y_cord, size: txt_size)
+  def drop_shadow(txt, coords=Coordinates.new, txt_color=Settings::TEXT_COLOR, txt_size=72)
+    offset = 2
+    Text.new(txt, color: Settings::BACKGROUND, x: coords.x + offset, y: coords.y + offset, size: txt_size)
+    Text.new(txt, color: txt_color, x:coords.x, y: coords.y, size: txt_size)
   end
 
 # need to detect one space ahead in the case of a head - on collision
@@ -49,12 +50,11 @@ class Board
     end
 
     if menu?
-      drop_shadow(Constants::GAME_TITLE, Settings::TEXT_COLOR, 70, 350, 72, 2)
-
-      drop_shadow(Settings::PRESS_SPACE,  Settings::TEXT_COLOR, 350, 425, 30, 2)
+      drop_shadow(Constants::GAME_TITLE, Coordinates.new(70, 350),Settings::TEXT_COLOR, 72)
+      drop_shadow(Settings::PRESS_SPACE,  Coordinates.new(350, 425),Settings::TEXT_COLOR,  30)
     end
-    drop_shadow(Constants::PROMPT + ' '+ Constants::PLAYER_ONE_KEYS, @p1color, 1920 - 250, Settings::GRID_HEIGHT-Settings::GRID_SIZE, 30,2)
-    drop_shadow(Constants::PROMPT + ' ' + Constants::PLAYER_TWO_KEYS,  @p2color, 10, Settings::GRID_HEIGHT-Settings::GRID_SIZE, 30,2)
+    drop_shadow(Constants::PROMPT + ' '+ Constants::PLAYER_ONE_KEYS, Coordinates.new(1920 - 250,Settings::GRID_HEIGHT-Settings::GRID_SIZE),@p1color,30)
+    drop_shadow(Constants::PROMPT + ' ' + Constants::PLAYER_TWO_KEYS,   Coordinates.new(10, Settings::GRID_HEIGHT-Settings::GRID_SIZE), @p2color,30)
   end
 
 # returns a string of who wins

@@ -1,6 +1,7 @@
 load 'button.rb'
 load 'settings.rb'
 load 'directions.rb'
+load 'player_ids.rb'
 
 class Snake
 # using color keywords so can id players in feedback.
