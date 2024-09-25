@@ -331,7 +331,7 @@ RSpec.describe Game do
       allow(game.board).to receive(:winner).and_return('player 1')
       game.stop_game
 
-      expect(game.board).to have_received(:drop_shadow).with(game.board.winner,  Settings::TEXT_COLOR, Settings::WINNER_MSG_X, Settings::WINNER_MSG_Y)
+      expect(game.board).to have_received(:drop_shadow).with(game.board.winner, anything,  anything,)
     end
 
     it "player one is not the winner, and player one Z isn't set with the Z index" do

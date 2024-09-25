@@ -2,6 +2,7 @@ require 'rspec'
 require 'ruby2d'
 load 'board.rb'
 load 'snake.rb'
+load 'coordinates.rb'
 
 RSpec.describe Board do
   describe '#initialize' do
@@ -73,6 +74,7 @@ RSpec.describe Board do
       expect(board.p2color).to eq('red')
     end
   end
+
   describe 'drop_shadow tests'do
     it "copy in drop shadow method should be passed to the Text object" do
       allow(Text).to receive(:new)
@@ -89,6 +91,15 @@ RSpec.describe Board do
       board = Board.new(s1, s2)
       board.drop_shadow('Look I made a hat')
       expect(Text).to have_received(:new).with('Look I made a hat', anything).twice()
+    end
+    it 'coorindates in coords object should be passed to the text objec' do
+      allow(Text).to receive(:new)
+      s1 = Snake.new()
+      s2 = Snake.new()
+      board = Board.new(s1, s2)
+      coords = Coordinates.new(7, 8)
+      board.drop_shadow('Look I made a hat', coords)
+      expect(Text).to have_received(:new).with(anything,{:color=>anything, :size=>anything, :x=>7, :y=>8})
     end
   end
 end

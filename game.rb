@@ -79,7 +79,8 @@ class Game
   def stop_game()
     @board.finish
     winner = @board.winner(@player1, @player2)
-    @board.drop_shadow(winner,  Settings::TEXT_COLOR, Settings::WINNER_MSG_X, Settings::WINNER_MSG_Y)
+
+    @board.drop_shadow(winner, Coordinates.new(Settings::WINNER_MSG_X, Settings::WINNER_MSG_Y), Settings::TEXT_COLOR)
   end
 
   def detect_key(k)
