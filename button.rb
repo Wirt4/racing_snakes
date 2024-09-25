@@ -1,3 +1,5 @@
+load 'keyboard_buttons.rb'
+
 class Button
   attr_accessor :up
   attr_accessor :down
